@@ -1,4 +1,4 @@
-package net.azurewebsites.soundsafeguard.view
+package net.azurewebsites.soundsafeguard.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
