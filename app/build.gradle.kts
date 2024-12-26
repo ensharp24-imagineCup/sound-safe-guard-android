@@ -57,6 +57,9 @@ dependencies {
     // SavedStateViewModel (ViewModel에서 상태 저장을 지원)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
 
+    // icon
+    implementation(libs.androidx.material.icons.extended)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
