@@ -9,8 +9,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +25,7 @@ import net.azurewebsites.soundsafeguard.R
 @Composable
 fun MainScreen() {
     var isActivated by remember { mutableStateOf(false) }
+    val offset = Offset(5.0f, 10.0f)
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -43,20 +47,30 @@ fun MainScreen() {
             if (isActivated) {
                 Text(
                     "Activated!",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = FontFamily(Font(R.font.inter_semibold)),
-                    lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
-                    color = Color.Black,
+                    style = TextStyle(
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily(Font(R.font.inter_semibold)),
+                        lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
+                        color = Color.Black,
+                        shadow = Shadow(
+                            color = Color.Gray, offset = offset, blurRadius = 1f
+                        )
+                    )
                 )
             } else {
                 Text(
                     "Start SSG",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = FontFamily(Font(R.font.inter_semibold)),
-                    lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
-                    color = Color.Black,
+                    style = TextStyle(
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily(Font(R.font.inter_semibold)),
+                        lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
+                        color = Color.Black,
+                        shadow = Shadow(
+                            color = Color.Gray, offset = offset, blurRadius = 1f
+                        )
+                    )
                 )
             }
 
