@@ -34,7 +34,7 @@ fun MainScreen() {
         ) {
             // 아이콘 및 텍스트
             Image(
-                painter = painterResource(id = if (isActivated) R.mipmap.app_icon_shadow else R.mipmap.app_icon_off),
+                painter = painterResource(id = if (isActivated) R.drawable.app_icon_shadow else R.drawable.app_icon_off),
                 contentDescription = null,
                 modifier = Modifier.size(100.dp)
             )
