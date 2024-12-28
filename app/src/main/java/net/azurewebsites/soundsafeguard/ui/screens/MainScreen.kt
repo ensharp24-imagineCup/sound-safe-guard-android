@@ -1,26 +1,20 @@
 package net.azurewebsites.soundsafeguard.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.azurewebsites.soundsafeguard.R
-
+import net.azurewebsites.soundsafeguard.ui.components.CustomText
 
 @Composable
 fun MainScreen() {
@@ -45,33 +39,9 @@ fun MainScreen() {
                 modifier = Modifier.size(100.dp)
             )
             if (isActivated) {
-                Text(
-                    "Activated!",
-                    style = TextStyle(
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = FontFamily(Font(R.font.inter_semibold)),
-                        lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
-                        color = Color.Black,
-                        shadow = Shadow(
-                            color = Color.Gray, offset = offset, blurRadius = 1f
-                        )
-                    )
-                )
+                CustomText("Activated!", offset)
             } else {
-                Text(
-                    "Start SSG",
-                    style = TextStyle(
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = FontFamily(Font(R.font.inter_semibold)),
-                        lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
-                        color = Color.Black,
-                        shadow = Shadow(
-                            color = Color.Gray, offset = offset, blurRadius = 1f
-                        )
-                    )
-                )
+                CustomText("Start SSG", offset)
             }
 
             Spacer(modifier = Modifier.height(20.dp))
