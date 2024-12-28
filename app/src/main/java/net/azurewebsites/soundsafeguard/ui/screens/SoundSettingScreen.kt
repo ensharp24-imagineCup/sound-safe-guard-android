@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,11 +30,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.AddButton
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SoundList
+import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 
 @Composable
 fun SoundSettingScreen(
     navController: NavController,
-    context: Context
+    context: Context,
+    viewModel: SoundViewModel
 ) {
     val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
     var searchQuery by remember { mutableStateOf("") }
@@ -113,5 +116,5 @@ fun SoundSettingText() {
 @Preview
 @Composable
 fun SoundSettingPreview() {
-    SoundSettingScreen(rememberNavController(), LocalContext.current)
+    SoundSettingScreen(rememberNavController(), LocalContext.current, SoundViewModel())
 }

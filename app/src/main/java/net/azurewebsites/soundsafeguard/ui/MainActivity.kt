@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import net.azurewebsites.soundsafeguard.ui.screens.SoundSettingScreen
 import net.azurewebsites.soundsafeguard.ui.theme.SoundSafeGuardTheme
+import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +34,7 @@ fun MainNavHost(
     ) {
         composable("soundSetting") {
             // Home 화면
-            SoundSettingScreen(navController, LocalContext.current)
+            SoundSettingScreen(navController, LocalContext.current, SoundViewModel())
         }
     }
 }
