@@ -2,17 +2,22 @@ package net.azurewebsites.soundsafeguard.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.azurewebsites.soundsafeguard.R
+
 
 @Composable
 fun MainScreen() {
@@ -36,9 +41,23 @@ fun MainScreen() {
                 modifier = Modifier.size(100.dp)
             )
             if (isActivated) {
-                Text("Activated!", fontSize = 24.sp, color = Color(0xFF00796B))
+                Text(
+                    "Activated!",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = FontFamily(Font(R.font.inter_semibold)),
+                    lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
+                    color = Color.Black,
+                )
             } else {
-                Text("Start SSG", fontSize = 24.sp, color = Color(0xFF616161))
+                Text(
+                    "Start SSG",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = FontFamily(Font(R.font.inter_semibold)),
+                    lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
+                    color = Color.Black,
+                )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -46,16 +65,31 @@ fun MainScreen() {
             // 스위치
             Switch(
                 checked = isActivated,
-                onCheckedChange = { isActivated = it }
+                onCheckedChange = { isActivated = it },
+                modifier = Modifier.size(77.dp, 32.dp)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             // 설명 텍스트
             if (isActivated) {
-                Text("SSG listening to the sound.", fontSize = 16.sp, color = Color.Gray)
+                Text(
+                    "SSG listening to the sound.",
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.inter_regular)), // Inter Regular 폰트 설정
+                    lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
+                    //letterSpacing = (-4).sp, // -4%의 글자 간격
+                    color = Color.Gray
+                )
             } else {
-                Text("Try the personalized sound alert service!", fontSize = 16.sp, color = Color.Gray)
+                Text(
+                    "Try the personalized sound alert service!",
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.inter_regular)), // Inter Regular 폰트 설정
+                    lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
+                    //letterSpacing = (-4).sp, // -4%의 글자 간격
+                    color = Color.Gray
+                )
             }
         }
     }
