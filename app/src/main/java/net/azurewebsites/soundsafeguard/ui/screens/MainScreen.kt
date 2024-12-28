@@ -1,5 +1,6 @@
 package net.azurewebsites.soundsafeguard.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,8 +9,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import net.azurewebsites.soundsafeguard.R
 
 @Composable
 fun MainScreen() {
@@ -27,6 +30,11 @@ fun MainScreen() {
             verticalArrangement = Arrangement.Center
         ) {
             // 아이콘 및 텍스트
+            Image(
+                painter = painterResource(id = if (isActivated) R.mipmap.app_icon_shadow else R.mipmap.app_icon_off),
+                contentDescription = null,
+                modifier = Modifier.size(100.dp)
+            )
             if (isActivated) {
                 Text("Activated!", fontSize = 24.sp, color = Color(0xFF00796B))
             } else {
