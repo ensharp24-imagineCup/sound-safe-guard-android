@@ -1,21 +1,27 @@
 package net.azurewebsites.soundsafeguard.viewmodel
 
+import android.content.Context
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import net.azurewebsites.soundsafeguard.model.Sound
-import net.azurewebsites.soundsafeguard.model.SoundRepository
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import net.azurewebsites.soundsafeguard.dataStore
+import net.azurewebsites.soundsafeguard.model.PreferencesKeys
 
-class SoundViewModel(private val soundRepository: SoundRepository): ViewModel() {
-    private val _sounds = MutableStateFlow<List<Sound>>(emptyList())
-    val sounds: StateFlow<List<Sound>> get() = _sounds
+class SoundViewModel(context: Context): ViewModel() {
+    private val dataStore = context.dataStore
 
-    init {
-        loadSounds()
+    val sound: Flow<String?> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.SOUND]
     }
 
-    private fun loadSounds() {
-//        _sounds.value = soundRepository.getAllSounds()
-
+    fun saveSound(s: String) {
+        viewModelScope.launch {
+            dataStore.edit { preferences ->
+                preferences[PreferencesKeys.SOUND] = s
+            }
+        }
     }
 }

@@ -12,15 +12,17 @@ import net.azurewebsites.soundsafeguard.ui.screens.HomeScreen
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
 import net.azurewebsites.soundsafeguard.ui.screens.SoundSettingScreen
 import net.azurewebsites.soundsafeguard.ui.theme.SoundSafeGuardTheme
+import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
+import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val viewModel = ViewModelProvider(
-//            this,
-//            MainViewModelFactory(applicationContext)
-//        ).get(MainViewModel::class.java)
+        val viewModel = ViewModelProvider(
+            this,
+            SoundViewModelFactory(applicationContext)
+        ).get(SoundViewModel::class.java)
 
         setContent {
             SoundSafeGuardTheme {
@@ -29,12 +31,12 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "soundSetting") {
                     composable("home") { HomeScreen(navController) }
                     composable("main") { MainScreen() }
-//                    composable("soundSetting") {
-//                        SoundSettingScreen(
-//                            navController = navController,
-//                            viewModel = viewModel,
-//                        )
-//                    }
+                    composable("soundSetting") {
+                        SoundSettingScreen(
+                            navController = navController,
+                            viewModel = viewModel,
+                        )
+                    }
                 }
             }
         }
