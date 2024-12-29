@@ -30,21 +30,38 @@ import androidx.compose.ui.unit.sp
 import net.azurewebsites.soundsafeguard.R
 
 @Composable
-fun SoundList(sounds: List<String>, searchedName: String, onSearchQueryChanged: (String) -> Unit) {
+fun SoundList(
+    sounds: List<String>,
+    searchedName: String,
+    modifier: Modifier = Modifier,
+    onSearchQueryChanged: (String) -> Unit
+) {
     Column(
-        modifier = Modifier
-            .height(286.dp)
-            .background(color = Color.White, shape = RoundedCornerShape(20.dp))
-            .padding(vertical = 15.dp)
+        modifier = modifier
     ) {
-        SearchBar(searchedName, onSearchQueryChanged)
+        SearchBar(
+            searchedName = searchedName,
+            onSearchQueryChanged = onSearchQueryChanged,
+            modifier = Modifier
+                .padding(horizontal = 15.dp)
+                .padding(bottom = 15.dp)
+                .fillMaxWidth()
+                .height(40.dp)
+        )
 
         // List of sounds
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             sounds.forEach { sound ->
-                SoundItem(soundName = sound) {
+                SoundItem(
+                    soundName = sound,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp)
+                        .background(Color.White)
+                        .height(51.dp),
+                ) {
                 }
             }
         }
@@ -52,14 +69,14 @@ fun SoundList(sounds: List<String>, searchedName: String, onSearchQueryChanged: 
 }
 
 @Composable
-fun SoundItem(soundName: String, onSelect: () -> Unit) {
+fun SoundItem(
+    soundName: String,
+    modifier: Modifier = Modifier,
+    onSelect: () -> Unit
+) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 15.dp)
-            .background(Color.White)
+        modifier = modifier
             .clickable { onSelect() }
-            .height(51.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically

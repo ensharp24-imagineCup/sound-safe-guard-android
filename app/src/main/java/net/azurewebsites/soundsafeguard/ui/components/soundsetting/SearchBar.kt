@@ -24,13 +24,12 @@ import androidx.compose.ui.unit.sp
 import net.azurewebsites.soundsafeguard.R
 
 @Composable
-fun SearchBar(searchedName: String, onSearchQueryChanged: (String) -> Unit) {
+fun SearchBar(
+    searchedName: String,
+    modifier: Modifier = Modifier,
+    onSearchQueryChanged: (String) -> Unit) {
     Row(
-        modifier = Modifier
-            .padding(horizontal = 15.dp)
-            .padding(bottom = 15.dp)
-            .fillMaxWidth()
-            .height(40.dp)
+        modifier = modifier
     ) {
         BasicTextField(
             value = searchedName,

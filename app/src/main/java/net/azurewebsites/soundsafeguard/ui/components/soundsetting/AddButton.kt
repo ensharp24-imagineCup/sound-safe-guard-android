@@ -14,12 +14,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun AddButton(navController: NavController) {
+fun AddButton(navController: NavController,
+              modifier: Modifier = Modifier) {
     Button(
         onClick = { navController.navigate("home") },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(38.dp),
+        modifier = modifier,
         colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
     ) {
         Text(
