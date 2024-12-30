@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 
 private val Context.dataStore by preferencesDataStore(name = "sound_preferences")
 
-class SoundPreferencesRepository(private val context: Context) {
+class SoundRepository(private val context: Context) {
     private companion object PreferencesKeys {
         val SOUND = stringPreferencesKey("sound")
     }

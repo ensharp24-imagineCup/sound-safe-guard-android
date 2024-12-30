@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import net.azurewebsites.soundsafeguard.model.SoundPreferencesRepository
+import net.azurewebsites.soundsafeguard.model.SoundRepository
 
-class SoundViewModel(private val repository: SoundPreferencesRepository): ViewModel() {
+class SoundViewModel(private val repository: SoundRepository): ViewModel() {
     val sound: Flow<String?> = repository.sound
 
     init {
@@ -28,7 +28,7 @@ class SoundViewModelFactory(private val context: Context): ViewModelProvider.Fac
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SoundViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SoundViewModel(SoundPreferencesRepository(context)) as T
+            return SoundViewModel(SoundRepository(context)) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
