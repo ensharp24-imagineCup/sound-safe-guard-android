@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,11 +30,12 @@ import androidx.navigation.compose.rememberNavController
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.AddButton
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SearchBar
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SoundList
+import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 
 @Composable
 fun SoundSettingScreen(
     navController: NavController,
-//    viewModel: SoundViewModel
+    viewModel: SoundViewModel
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var sounds by remember {
@@ -50,9 +52,10 @@ fun SoundSettingScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp)
     ) {
+
         SoundSettingText(
             modifier = Modifier.padding(top = 43.4.dp, bottom = 10.dp),
-            minorModifier = Modifier.padding(bottom = 25.dp)
+            subModifier = Modifier.padding(bottom = 25.dp)
         )
 
         Text(
@@ -149,7 +152,7 @@ fun SoundSettingScreen(
 @Composable
 fun SoundSettingText(
     modifier: Modifier = Modifier,
-    minorModifier: Modifier = Modifier
+    subModifier: Modifier = Modifier
 ) {
     // Title and Subtitle
     Text(
@@ -162,14 +165,14 @@ fun SoundSettingText(
         text = "Please select the sound\nyou want to receive alerts for.",
         fontSize = 16.sp,
         color = Color.Gray,
-        modifier = minorModifier,
+        modifier = subModifier,
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SoundSettingPreview() {
-    SoundSettingScreen(
-        navController = rememberNavController(),
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun SoundSettingPreview() {
+//    SoundSettingScreen(
+//        navController = rememberNavController(),
+//    )
+//}

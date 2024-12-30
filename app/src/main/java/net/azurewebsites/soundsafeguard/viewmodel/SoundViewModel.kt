@@ -6,15 +6,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import net.azurewebsites.soundsafeguard.model.Sound
 import net.azurewebsites.soundsafeguard.model.SoundPreferencesRepository
 
 class SoundViewModel(private val repository: SoundPreferencesRepository): ViewModel() {
     val sound: Flow<String?> = repository.sound
 
-    suspend fun setSound(sound: Sound) {
+    init {
         viewModelScope.launch {
-            repository.setSound(sound.name)
+            repository.initializeSound()
+        }
+    }
+
+    fun setSound(sound: String) {
+        viewModelScope.launch {
+            repository.setSound(sound)
         }
     }
 }
