@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
 
         val viewModel = ViewModelProvider(
             this,
-            SoundViewModelFactory(SoundPreferencesRepository())
+            SoundViewModelFactory(applicationContext)
         )[SoundViewModel::class.java]
 
         setContent {
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     composable("soundSetting") {
                         SoundSettingScreen(
                             navController = navController,
-                            viewModel = viewModel,
+//                            viewModel = viewModel,
                         )
                     }
                 }

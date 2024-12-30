@@ -33,7 +33,7 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 @Composable
 fun SoundSettingScreen(
     navController: NavController,
-    viewModel: SoundViewModel
+//    viewModel: SoundViewModel
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val sounds = List(100) { "Siren$it" }
@@ -127,11 +127,10 @@ fun SoundSettingText(
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun SoundSettingPreview() {
     SoundSettingScreen(
         navController = rememberNavController(),
-        viewModel = viewModel()
     )
 }
