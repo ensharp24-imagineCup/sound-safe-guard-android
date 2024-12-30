@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.AddButton
+import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SearchBar
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SoundList
 
 @Composable
@@ -35,7 +36,12 @@ fun SoundSettingScreen(
 //    viewModel: SoundViewModel
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    val sounds = List(100) { "Siren$it" }
+    var sounds by remember {
+        mutableStateOf(List(100) { "Siren$it" })
+    }
+    var selectedSounds by remember {
+        mutableStateOf(emptyList<String>())
+    }
 
     Column(
         modifier = Modifier
@@ -62,15 +68,28 @@ fun SoundSettingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)
-                .background(Color.White, RoundedCornerShape(10.dp)),
+                .background(Color.White, RoundedCornerShape(10.dp))
+//                .verticalScroll(rememberScrollState()),
+                    ,
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = "Not selected",
-                fontSize = 16.sp,
-                color = Color.Gray,
-            )
+            if (selectedSounds.isEmpty()) {
+                Text(
+                    text = "Not selected",
+                    fontSize = 16.sp,
+                    color = Color.Gray,
+                )
+            } else {
+                SoundList(
+                    sounds = selectedSounds,
+                    isSelected = true,
+                    onSelect = {
+                        selectedSounds = selectedSounds.toMutableList().apply { remove(it) }
+                        sounds = sounds.toMutableList().apply { add(it) }
+                    },
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -84,15 +103,33 @@ fun SoundSettingScreen(
                 .align(Alignment.End)
         )
 
-        SoundList(
-            sounds = sounds,
-            searchQuery = searchQuery,
+        Column(
             modifier = Modifier
                 .height(286.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(20.dp))
                 .padding(vertical = 15.dp),
-        ) { newQuery ->
-            searchQuery = newQuery
+        ) {
+            SearchBar(
+                searchQuery = searchQuery,
+                onSearchQueryChanged = { newQuery ->
+                    searchQuery = newQuery
+                },
+                modifier = Modifier
+                    .padding(horizontal = 15.dp)
+                    .padding(bottom = 15.dp)
+                    .fillMaxWidth()
+                    .height(40.dp)
+            )
+
+            SoundList(
+                sounds = sounds,
+                searchQuery = searchQuery,
+                isSelected = false,
+                onSelect = {
+                    sounds = sounds.toMutableList().apply { remove(it) }
+                    selectedSounds = selectedSounds.toMutableList().apply { add(it) }
+                },
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))

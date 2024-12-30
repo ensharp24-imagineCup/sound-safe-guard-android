@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,39 +32,26 @@ import net.azurewebsites.soundsafeguard.R
 @Composable
 fun SoundList(
     sounds: List<String>,
-    searchQuery: String,
+    searchQuery: String = "",
+    isSelected: Boolean,
     modifier: Modifier = Modifier,
-    onSearchQueryChanged: (String) -> Unit
+    onSelect: (String) -> Unit,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.verticalScroll(rememberScrollState())
     ) {
-        SearchBar(
-            searchQuery = searchQuery,
-            onSearchQueryChanged = onSearchQueryChanged,
-            modifier = Modifier
-                .padding(horizontal = 15.dp)
-                .padding(bottom = 15.dp)
-                .fillMaxWidth()
-                .height(40.dp)
-        )
-
-        // List of sounds
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState())
-        ) {
-            sounds.forEach { sound ->
-                if (searchQuery.isEmpty() || searchQuery.lowercase() in sound.lowercase())
+        sounds.forEach { sound ->
+            if (searchQuery.isEmpty() || searchQuery.lowercase() in sound.lowercase())
                 SoundItem(
                     soundName = sound,
+                    isSelected = isSelected,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 15.dp)
                         .background(Color.White)
                         .height(51.dp),
-                ) {
-                }
-            }
+                    onSelect = onSelect
+                )
         }
     }
 }
@@ -71,12 +59,13 @@ fun SoundList(
 @Composable
 fun SoundItem(
     soundName: String,
+    isSelected: Boolean,
     modifier: Modifier = Modifier,
-    onSelect: () -> Unit
+    onSelect: (String) -> Unit
 ) {
     Column(
         modifier = modifier
-            .clickable { onSelect() }
+            .clickable { onSelect(soundName) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -97,11 +86,18 @@ fun SoundItem(
             )
 
             // Add button
-            IconButton(onClick = onSelect) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Icon",
-                )
+            IconButton(onClick = { onSelect(soundName) }) {
+                if (isSelected) {
+                    Icon(
+                        imageVector = Icons.Default.Cancel,
+                        contentDescription = "",
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Icon",
+                    )
+                }
             }
         }
         HorizontalDivider(thickness = 1.dp)
