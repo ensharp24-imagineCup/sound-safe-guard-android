@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import net.azurewebsites.soundsafeguard.model.SoundPreferencesRepository
 import net.azurewebsites.soundsafeguard.ui.screens.HomeScreen
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
 import net.azurewebsites.soundsafeguard.ui.screens.SoundSettingScreen
@@ -21,8 +22,8 @@ class MainActivity : ComponentActivity() {
 
         val viewModel = ViewModelProvider(
             this,
-            SoundViewModelFactory(applicationContext)
-        ).get(SoundViewModel::class.java)
+            SoundViewModelFactory(SoundPreferencesRepository())
+        )[SoundViewModel::class.java]
 
         setContent {
             SoundSafeGuardTheme {

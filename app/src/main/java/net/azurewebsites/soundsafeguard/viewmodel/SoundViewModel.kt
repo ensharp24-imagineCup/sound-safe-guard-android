@@ -1,27 +1,18 @@
 package net.azurewebsites.soundsafeguard.viewmodel
 
-import android.content.Context
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
-import net.azurewebsites.soundsafeguard.dataStore
-import net.azurewebsites.soundsafeguard.model.PreferencesKeys
+import androidx.lifecycle.ViewModelProvider
+import net.azurewebsites.soundsafeguard.model.SoundPreferencesRepository
 
-class SoundViewModel(context: Context): ViewModel() {
-    private val dataStore = context.dataStore
+class SoundViewModel(private val repository: SoundPreferencesRepository): ViewModel() {
+}
 
-    val sound: Flow<String?> = dataStore.data.map { preferences ->
-        preferences[PreferencesKeys.SOUND]
-    }
-
-    fun saveSound(s: String) {
-        viewModelScope.launch {
-            dataStore.edit { preferences ->
-                preferences[PreferencesKeys.SOUND] = s
-            }
+class SoundViewModelFactory(private val repository: SoundPreferencesRepository): ViewModelProvider.Factory {
+    override fun <T: ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(SoundViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return SoundViewModel(repository) as T
         }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
