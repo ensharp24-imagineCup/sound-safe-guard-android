@@ -11,6 +11,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,7 +31,8 @@ import net.azurewebsites.soundsafeguard.R
 fun SearchBar(
     searchQuery: String,
     modifier: Modifier = Modifier,
-    onSearchQueryChanged: (String) -> Unit) {
+    onSearchQueryChanged: (String) -> Unit
+) {
     Row(
         modifier = modifier
     ) {
@@ -75,19 +82,23 @@ fun CategoryComposable() {
     ) {
         Text(
             text = "Category",
-            fontSize = 16.sp,
+            fontSize = 15.sp,
             color = Color.White,
             modifier = Modifier.align(Alignment.CenterVertically)
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Image(
-            painter = painterResource(id = R.drawable.category_selected_icon),
-            contentDescription = "Siren Icon",
+        IconButton(
             modifier = Modifier
-                .size(13.dp)
-                .align(Alignment.CenterVertically)
-        )
+                .size(30.dp)
+                .align(Alignment.CenterVertically),
+            onClick = { }) {
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = "Category DropDown Icon",
+                tint = Color.White
+            )
+        }
     }
 }

@@ -68,9 +68,7 @@ fun SoundSettingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)
-                .background(Color.White, RoundedCornerShape(10.dp))
-//                .verticalScroll(rememberScrollState()),
-                    ,
+                .background(Color.White, RoundedCornerShape(10.dp)),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -86,7 +84,9 @@ fun SoundSettingScreen(
                     isSelected = true,
                     onSelect = {
                         selectedSounds = selectedSounds.toMutableList().apply { remove(it) }
+
                         sounds = sounds.toMutableList().apply { add(it) }
+                        (sounds as MutableList<String>).sort()
                     },
                 )
             }
@@ -127,7 +127,9 @@ fun SoundSettingScreen(
                 isSelected = false,
                 onSelect = {
                     sounds = sounds.toMutableList().apply { remove(it) }
+
                     selectedSounds = selectedSounds.toMutableList().apply { add(it) }
+                    (selectedSounds as MutableList<String>).sort()
                 },
             )
         }
