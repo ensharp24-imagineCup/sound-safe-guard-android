@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,14 +23,14 @@ import net.azurewebsites.soundsafeguard.R
 
 @Composable
 fun SearchBar(
-    searchedName: String,
+    searchQuery: String,
     modifier: Modifier = Modifier,
     onSearchQueryChanged: (String) -> Unit) {
     Row(
         modifier = modifier
     ) {
         BasicTextField(
-            value = searchedName,
+            value = searchQuery,
             onValueChange = { newValue ->
                 onSearchQueryChanged(newValue)
             },
@@ -46,7 +44,7 @@ fun SearchBar(
                     contentAlignment = Alignment.CenterStart,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 ) {
-                    if (searchedName.isEmpty()) {
+                    if (searchQuery.isEmpty()) {
                         Text(
                             text = "Name",
                             fontSize = 16.sp,

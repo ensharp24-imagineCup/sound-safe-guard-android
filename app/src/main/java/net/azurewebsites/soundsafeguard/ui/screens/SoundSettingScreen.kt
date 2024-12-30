@@ -1,6 +1,7 @@
 package net.azurewebsites.soundsafeguard.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,12 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.AddButton
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SoundList
-import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 
 @Composable
 fun SoundSettingScreen(
@@ -63,13 +62,14 @@ fun SoundSettingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)
-                .background(Color.White, RoundedCornerShape(10.dp))
+                .background(Color.White, RoundedCornerShape(10.dp)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = "Not selected",
                 fontSize = 16.sp,
                 color = Color.Gray,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
 
@@ -86,7 +86,7 @@ fun SoundSettingScreen(
 
         SoundList(
             sounds = sounds,
-            searchedName = searchQuery,
+            searchQuery = searchQuery,
             modifier = Modifier
                 .height(286.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(20.dp))

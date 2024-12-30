@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -32,7 +31,7 @@ import net.azurewebsites.soundsafeguard.R
 @Composable
 fun SoundList(
     sounds: List<String>,
-    searchedName: String,
+    searchQuery: String,
     modifier: Modifier = Modifier,
     onSearchQueryChanged: (String) -> Unit
 ) {
@@ -40,7 +39,7 @@ fun SoundList(
         modifier = modifier
     ) {
         SearchBar(
-            searchedName = searchedName,
+            searchQuery = searchQuery,
             onSearchQueryChanged = onSearchQueryChanged,
             modifier = Modifier
                 .padding(horizontal = 15.dp)
@@ -54,6 +53,7 @@ fun SoundList(
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             sounds.forEach { sound ->
+                if (searchQuery.isEmpty() || searchQuery.lowercase() in sound.lowercase())
                 SoundItem(
                     soundName = sound,
                     modifier = Modifier
