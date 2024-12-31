@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,36 +30,42 @@ import androidx.compose.ui.unit.sp
 import net.azurewebsites.soundsafeguard.R
 
 @Composable
-fun SoundList(sounds: List<String>, searchedName: String, onSearchQueryChanged: (String) -> Unit) {
+fun SoundList(
+    sounds: List<String>,
+    searchQuery: String = "",
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    onSelect: (String) -> Unit,
+) {
     Column(
-        modifier = Modifier
-            .height(286.dp)
-            .background(color = Color.White, shape = RoundedCornerShape(20.dp))
-            .padding(vertical = 15.dp)
+        modifier = modifier.verticalScroll(rememberScrollState())
     ) {
-        SearchBar(searchedName, onSearchQueryChanged)
-
-        // List of sounds
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState())
-        ) {
-            sounds.forEach { sound ->
-                SoundItem(soundName = sound) {
-                }
-            }
+        sounds.forEach { sound ->
+            if (searchQuery.isEmpty() || searchQuery.lowercase() in sound.lowercase())
+                SoundItem(
+                    soundName = sound,
+                    isSelected = isSelected,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp)
+                        .background(Color.White)
+                        .height(51.dp),
+                    onSelect = onSelect
+                )
         }
     }
 }
 
 @Composable
-fun SoundItem(soundName: String, onSelect: () -> Unit) {
+fun SoundItem(
+    soundName: String,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    onSelect: (String) -> Unit
+) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 15.dp)
-            .background(Color.White)
-            .clickable { onSelect() }
-            .height(51.dp),
+        modifier = modifier
+            .clickable { onSelect(soundName) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -80,11 +86,18 @@ fun SoundItem(soundName: String, onSelect: () -> Unit) {
             )
 
             // Add button
-            IconButton(onClick = onSelect) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Icon",
-                )
+            IconButton(onClick = { onSelect(soundName) }) {
+                if (isSelected) {
+                    Icon(
+                        imageVector = Icons.Default.Cancel,
+                        contentDescription = "",
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Icon",
+                    )
+                }
             }
         }
         HorizontalDivider(thickness = 1.dp)

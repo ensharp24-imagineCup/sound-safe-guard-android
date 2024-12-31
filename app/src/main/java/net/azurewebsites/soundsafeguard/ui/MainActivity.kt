@@ -3,6 +3,8 @@
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.ViewModelProvider
+import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,9 +22,16 @@ import androidx.compose.material3.Scaffold
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val viewModel = ViewModelProvider(
+            this,
+            SoundViewModelFactory(applicationContext)
+        )[SoundViewModel::class.java]
+
         setContent {
             SoundSafeGuardTheme {
                 val navController = rememberNavController()
+
                 Scaffold(
                     topBar = {
                         AppBar(title = "SSG")
@@ -35,9 +44,11 @@ class MainActivity : ComponentActivity() {
                         composable("main") { 
                             MainScreen() 
                         }
-                        composable("soundSetting") { 
-                            SoundSettingScreen(navController, LocalContext.current, SoundViewModel()) 
-                        }
+                        composable("soundSetting") {
+                        SoundSettingScreen(
+                            navController = navController,
+                            viewModel = viewModel,
+                        )
                     }
                 }
             }

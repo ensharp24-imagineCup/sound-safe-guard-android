@@ -1,7 +1,7 @@
 package net.azurewebsites.soundsafeguard.ui.screens
 
-import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,18 +28,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.AddButton
+import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SearchBar
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SoundList
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 
 @Composable
 fun SoundSettingScreen(
     navController: NavController,
-    context: Context,
     viewModel: SoundViewModel
 ) {
-    val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
     var searchQuery by remember { mutableStateOf("") }
-    val sounds = List(100) { "Siren$it" }
+    val sounds by viewModel.sounds.collectAsState(initial = emptyList())
+    val selectedSounds by viewModel.selectedSound.collectAsState(initial = emptyList())
 
     Column(
         modifier = Modifier
@@ -49,7 +48,11 @@ fun SoundSettingScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp)
     ) {
-        SoundSettingText()
+
+        SoundSettingText(
+            modifier = Modifier.padding(top = 43.4.dp, bottom = 10.dp),
+            subModifier = Modifier.padding(bottom = 25.dp)
+        )
 
         Text(
             text = "Selected",
@@ -64,14 +67,23 @@ fun SoundSettingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)
-                .background(Color.White, RoundedCornerShape(10.dp))
+                .background(Color.White, RoundedCornerShape(10.dp)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = "Not selected",
-                fontSize = 16.sp,
-                color = Color.Gray,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+            if (selectedSounds.isEmpty()) {
+                Text(
+                    text = "Not selected",
+                    fontSize = 16.sp,
+                    color = Color.Gray,
+                )
+            } else {
+                SoundList(
+                    sounds = selectedSounds,
+                    isSelected = true,
+                    onSelect = { viewModel.unselectSound(it)},
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -85,36 +97,68 @@ fun SoundSettingScreen(
                 .align(Alignment.End)
         )
 
-        SoundList(sounds, searchQuery) { newQuery ->
-            searchQuery = newQuery
+        Column(
+            modifier = Modifier
+                .height(286.dp)
+                .background(color = Color.White, shape = RoundedCornerShape(20.dp))
+                .padding(vertical = 15.dp),
+        ) {
+            SearchBar(
+                searchQuery = searchQuery,
+                onSearchQueryChanged = { newQuery ->
+                    searchQuery = newQuery
+                },
+                modifier = Modifier
+                    .padding(horizontal = 15.dp)
+                    .padding(bottom = 15.dp)
+                    .fillMaxWidth()
+                    .height(40.dp)
+            )
+
+            SoundList(
+                sounds = sounds,
+                searchQuery = searchQuery,
+                isSelected = false,
+                onSelect = { viewModel.selectSound(it) },
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
         // Add Button
-        AddButton(navController)
+        AddButton(
+            navController = navController,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(38.dp),
+        )
     }
 }
 
 @Composable
-fun SoundSettingText() {
+fun SoundSettingText(
+    modifier: Modifier = Modifier,
+    subModifier: Modifier = Modifier
+) {
     // Title and Subtitle
     Text(
         text = "Sound Setting",
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(top = 43.4.dp, bottom = 10.dp)
+        modifier = modifier,
     )
     Text(
         text = "Please select the sound\nyou want to receive alerts for.",
         fontSize = 16.sp,
         color = Color.Gray,
-        modifier = Modifier.padding(bottom = 25.dp)
+        modifier = subModifier,
     )
 }
 
-@Preview
-@Composable
-fun SoundSettingPreview() {
-    SoundSettingScreen(rememberNavController(), LocalContext.current, SoundViewModel())
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun SoundSettingPreview() {
+//    SoundSettingScreen(
+//        navController = rememberNavController(),
+//    )
+//}
