@@ -31,7 +31,7 @@ class SoundRepository(private val context: Context) {
             preferences[SOUND_LIST_KEY]
         }.first()
 
-        if (currentSound != null) return
+//        if (currentSound != null) return
 
         context.dataStore.edit { preferences ->
             val jsonString = Gson().toJson(List(10) { "Siren$it" })
