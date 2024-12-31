@@ -6,7 +6,7 @@ plugins {
 android {
     namespace = "net.azurewebsites.soundsafeguard"
     compileSdk = 35
-
+    
     defaultConfig {
         applicationId = "net.azurewebsites.soundsafeguard"
         minSdk = 24
@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.tensorflow.lite.task.audio)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
