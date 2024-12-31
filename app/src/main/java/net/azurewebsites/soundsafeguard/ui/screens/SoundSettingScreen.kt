@@ -38,12 +38,8 @@ fun SoundSettingScreen(
     viewModel: SoundViewModel
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    var sounds by remember {
-        mutableStateOf(List(100) { "Siren$it" })
-    }
-    var selectedSounds by remember {
-        mutableStateOf(emptyList<String>())
-    }
+    val sounds by viewModel.sounds.collectAsState(initial = emptyList())
+    val selectedSounds by viewModel.selectedSound.collectAsState(initial = emptyList())
 
     Column(
         modifier = Modifier
@@ -85,12 +81,7 @@ fun SoundSettingScreen(
                 SoundList(
                     sounds = selectedSounds,
                     isSelected = true,
-                    onSelect = {
-                        selectedSounds = selectedSounds.toMutableList().apply { remove(it) }
-
-                        sounds = sounds.toMutableList().apply { add(it) }
-                        (sounds as MutableList<String>).sort()
-                    },
+                    onSelect = { viewModel.unselectSound(it)},
                 )
             }
         }
@@ -128,12 +119,7 @@ fun SoundSettingScreen(
                 sounds = sounds,
                 searchQuery = searchQuery,
                 isSelected = false,
-                onSelect = {
-                    sounds = sounds.toMutableList().apply { remove(it) }
-
-                    selectedSounds = selectedSounds.toMutableList().apply { add(it) }
-                    (selectedSounds as MutableList<String>).sort()
-                },
+                onSelect = { viewModel.selectSound(it) },
             )
         }
 

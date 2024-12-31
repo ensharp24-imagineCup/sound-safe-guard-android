@@ -10,6 +10,7 @@ import net.azurewebsites.soundsafeguard.model.SoundRepository
 
 class SoundViewModel(private val repository: SoundRepository): ViewModel() {
     val sounds: Flow<List<String>> = repository.sounds
+    val selectedSound: Flow<List<String>> = repository.selectedSounds
 
     init {
         viewModelScope.launch {
@@ -17,9 +18,15 @@ class SoundViewModel(private val repository: SoundRepository): ViewModel() {
         }
     }
 
-    fun saveSound(sound: String) {
+    fun selectSound(sound: String) {
         viewModelScope.launch {
-            repository.saveSound(sound)
+            repository.selectSound(sound)
+        }
+    }
+
+    fun unselectSound(sound: String) {
+        viewModelScope.launch {
+            repository.unselectSound(sound)
         }
     }
 }
