@@ -46,15 +46,6 @@ fun MainScreen() {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 스위치
-            Switch(
-                checked = isActivated,
-                onCheckedChange = { isActivated = it },
-                modifier = Modifier.size(77.dp, 32.dp)
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
             // 설명 텍스트
             if (isActivated) {
                 Text(
@@ -75,6 +66,15 @@ fun MainScreen() {
                     color = Color.Gray
                 )
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // 스위치
+            Switch(
+                checked = isActivated,
+                onCheckedChange = { isActivated = it },
+                modifier = Modifier.size(77.dp, 32.dp)
+            )
         }
     }
 }
