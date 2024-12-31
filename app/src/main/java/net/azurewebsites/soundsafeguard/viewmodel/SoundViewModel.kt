@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import net.azurewebsites.soundsafeguard.model.SoundRepository
 
 class SoundViewModel(private val repository: SoundRepository): ViewModel() {
-    val sound: Flow<String?> = repository.sound
+    val sounds: Flow<List<String>> = repository.sounds
 
     init {
         viewModelScope.launch {
@@ -17,9 +17,9 @@ class SoundViewModel(private val repository: SoundRepository): ViewModel() {
         }
     }
 
-    fun setSound(sound: String) {
+    fun saveSound(sound: String) {
         viewModelScope.launch {
-            repository.setSound(sound)
+            repository.saveSound(sound)
         }
     }
 }
