@@ -14,6 +14,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import net.azurewebsites.soundsafeguard.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,14 +38,25 @@ fun AppBar(title: String) {
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
+                Image(
+                    painter = painterResource(id = R.drawable.app_icon_shadow),
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp)
+                )
                 Text(
                     text = title,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     color = Color(0xFF00A980),
                     fontWeight = FontWeight.Bold,
-                    lineHeight = 22.sp,
-                    textAlign = TextAlign.Center
+                    lineHeight = 24.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(start = 70.dp)
                 )
+            }
+        },
+        actions = {
+            IconButton(onClick = {}) {
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "메뉴")
             }
         }
     )
@@ -42,5 +65,5 @@ fun AppBar(title: String) {
 @Preview
 @Composable
 fun AppBarPreview() {
-    AppBar(title = "앱 제목")
+    AppBar(title = "SSG")
 }
