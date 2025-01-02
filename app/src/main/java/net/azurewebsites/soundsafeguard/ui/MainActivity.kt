@@ -1,4 +1,4 @@
-    package net.azurewebsites.soundsafeguard.ui
+package net.azurewebsites.soundsafeguard.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,12 +12,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import net.azurewebsites.soundsafeguard.ui.components.AppBar
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
+import net.azurewebsites.soundsafeguard.ui.screens.RecordScreen
 import net.azurewebsites.soundsafeguard.ui.screens.SoundSettingScreen
 import net.azurewebsites.soundsafeguard.ui.theme.SoundSafeGuardTheme
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
-    class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,15 +36,23 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
                         AppBar(title = "SSG")
                     }
                 ) { innerPadding ->
-                    NavHost(navController, startDestination = "main", Modifier.padding(innerPadding)) {
-                        composable("main") { 
-                            MainScreen() 
+                    NavHost(
+                        navController,
+                        startDestination = "soundSetting",
+                        Modifier.padding(innerPadding)
+                    ) {
+                        composable("main") {
+                            MainScreen()
                         }
                         composable("soundSetting") {
-                        SoundSettingScreen(
-                            navController = navController,
-                            viewModel = viewModel,
-                        )
+                            SoundSettingScreen(
+                                navController = navController,
+                                viewModel = viewModel,
+                            )
+                        }
+                        composable("record") {
+                            RecordScreen()
+                        }
                     }
                 }
             }
