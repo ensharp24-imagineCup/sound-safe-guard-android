@@ -5,8 +5,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 
 private val Context.dataStore by preferencesDataStore(name = "sound_preferences")
 
@@ -29,13 +30,21 @@ class SoundRepository(private val context: Context) {
     suspend fun initializeSound() {
         val currentSound = context.dataStore.data.map { preferences ->
             preferences[SOUND_LIST_KEY]
+        }.firstOrNull()
+
+        if (currentSound != null) return
+
+        val soundList = readSoundListFromAssets("sound_list.json")
+
+        if (soundList.isEmpty()) {
+            println("sound_list.json 파일이 비어 있습니다.")
+            return
         }
 
-//        if (currentSound != null) return
-//
-//        context.dataStore.edit { preferences ->
-//
-//        }
+        context.dataStore.edit { preferences ->
+            val soundListJson = Gson().toJson(soundList)
+            preferences[SOUND_LIST_KEY] = soundListJson
+        }
     }
 
     /**
@@ -92,13 +101,22 @@ class SoundRepository(private val context: Context) {
         }
     }
 
+    private fun readSoundListFromAssets(fileName: String): List<String> {
+        return try {
+            val inputStream = context.assets.open(fileName)
+            val json = inputStream.bufferedReader().use { it.readText() }
+            Gson().fromJson(json, object : TypeToken<List<String>>() {}.type)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
     private suspend fun printDataStore() {
         println("DataStore 출력 시작.")
-        runBlocking {
-            context.dataStore.data.collect { preferences ->
-                preferences.asMap().forEach { (key, value) ->
-                    println("Key: $key, Value: $value")
-                }
+        context.dataStore.data.collect { preferences ->
+            preferences.asMap().forEach { (key, value) ->
+                println("Key: $key, Value: $value")
             }
         }
         println("DataStore 출력 종료")
