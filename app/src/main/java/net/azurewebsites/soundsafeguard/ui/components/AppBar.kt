@@ -45,10 +45,10 @@ fun AppBar(title: String) {
                 )
                 Text(
                     text = title,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     color = Color(0xFF00A980),
                     fontWeight = FontWeight.Bold,
-                    lineHeight = 24.sp,
+                    lineHeight = 22.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(start = 70.dp)
                 )

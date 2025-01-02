@@ -1,5 +1,6 @@
 package net.azurewebsites.soundsafeguard.ui.components
 
+/*
 import android.content.Context
 import android.graphics.Color
 import androidx.annotation.StringRes
@@ -100,3 +101,5 @@ sealed class BottomNavigationItem(
     object Home : BottomNavigationItem(R.string.,Icons.Default.Home , "Home")
     object Setting : BottomNavigationItem("setting", Icons.Default.Settings, "Settings")
 }
+
+*/
