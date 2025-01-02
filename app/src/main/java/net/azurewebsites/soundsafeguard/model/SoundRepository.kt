@@ -5,8 +5,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 private val Context.dataStore by preferencesDataStore(name = "sound_preferences")
 
@@ -29,14 +29,13 @@ class SoundRepository(private val context: Context) {
     suspend fun initializeSound() {
         val currentSound = context.dataStore.data.map { preferences ->
             preferences[SOUND_LIST_KEY]
-        }.first()
+        }
 
 //        if (currentSound != null) return
-
-        context.dataStore.edit { preferences ->
-            val jsonString = Gson().toJson(List(10) { "Siren$it" })
-            preferences[SOUND_LIST_KEY] = jsonString
-        }
+//
+//        context.dataStore.edit { preferences ->
+//
+//        }
     }
 
     /**
@@ -91,5 +90,25 @@ class SoundRepository(private val context: Context) {
                 preferences[SOUND_LIST_KEY] = Gson().toJson(currentSounds)
             }
         }
+    }
+
+    private suspend fun printDataStore() {
+        println("DataStore 출력 시작.")
+        runBlocking {
+            context.dataStore.data.collect { preferences ->
+                preferences.asMap().forEach { (key, value) ->
+                    println("Key: $key, Value: $value")
+                }
+            }
+        }
+        println("DataStore 출력 종료")
+    }
+
+    private suspend fun deleteAllDataStore() {
+        context.dataStore.edit { preferences ->
+            preferences.clear()
+        }
+        println("DataStore의 모든 데이터가 삭제되었습니다.")
+
     }
 }
