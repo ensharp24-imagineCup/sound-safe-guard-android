@@ -50,15 +50,21 @@ android {
 }
 
 dependencies {
-
     // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    // SavedStateViewModel (ViewModel에서 상태 저장을 지원)
+    // SavedStateViewModel (ViewModel 에서 상태 저장을 지원)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
 
     // icon
     implementation(libs.androidx.material.icons.extended)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore)
+
+    // Gson
+    implementation(libs.gson)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -69,6 +75,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.tensorflow.lite.task.audio)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
