@@ -15,8 +15,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +26,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import net.azurewebsites.soundsafeguard.R
 import net.azurewebsites.soundsafeguard.ui.components.CustomText
 import net.azurewebsites.soundsafeguard.viewmodel.MainViewModel
@@ -56,7 +53,7 @@ fun MainScreen(viewModel: MainViewModel) {
                         )
                     )
                 } else {
-                    Modifier.background(Color.White)
+                    Modifier.background(Color(0xFFF7F8FA))
                 }
             )
         ) {

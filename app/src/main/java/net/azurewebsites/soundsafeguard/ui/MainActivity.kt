@@ -61,6 +61,7 @@ class MainActivity : ComponentActivity() {
                             SoundSettingScreen(
                                 navController = navController,
                                 viewModel = viewModel,
+                                mainViewModel
                             )
                         }
                         composable("record") {
