@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.azurewebsites.soundsafeguard.model.SoundRepository
 
 class SoundViewModel(private val repository: SoundRepository): ViewModel() {
@@ -13,7 +14,7 @@ class SoundViewModel(private val repository: SoundRepository): ViewModel() {
     val selectedSound: Flow<List<String>> = repository.selectedSounds
 
     init {
-        viewModelScope.launch {
+        runBlocking {
             repository.initializeSound()
         }
     }
