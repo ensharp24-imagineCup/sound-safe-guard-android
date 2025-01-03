@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController,
-                        startDestination = "soundSetting",
+                        startDestination = "main",
                         Modifier.padding(innerPadding)
                     ) {
                         composable("start") {
@@ -59,7 +59,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-
             }
         }
     }

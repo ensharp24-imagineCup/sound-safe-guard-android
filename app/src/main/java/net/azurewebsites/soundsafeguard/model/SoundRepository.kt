@@ -34,7 +34,7 @@ class SoundRepository(private val context: Context) {
 
         if (currentSound != null) return
 
-        val soundList = readSoundListFromAssets("sound_list.json")
+        val soundList = readSoundListFromAssets("sound_list.json").sorted()
 
         if (soundList.isEmpty()) {
             println("sound_list.json 파일이 비어 있습니다.")
@@ -42,8 +42,7 @@ class SoundRepository(private val context: Context) {
         }
 
         context.dataStore.edit { preferences ->
-            val soundListJson = Gson().toJson(soundList)
-            preferences[SOUND_LIST_KEY] = soundListJson
+            preferences[SOUND_LIST_KEY] = Gson().toJson(soundList)
         }
     }
 
@@ -127,6 +126,5 @@ class SoundRepository(private val context: Context) {
             preferences.clear()
         }
         println("DataStore의 모든 데이터가 삭제되었습니다.")
-
     }
 }
