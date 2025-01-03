@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = "main",
                         Modifier.padding(innerPadding)
                     ) {
+
                         composable("start") {
                             StartScreen()
                         }
