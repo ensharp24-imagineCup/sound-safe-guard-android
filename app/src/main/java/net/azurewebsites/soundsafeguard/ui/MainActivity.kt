@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import net.azurewebsites.soundsafeguard.ui.components.AppBar
+import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
 import net.azurewebsites.soundsafeguard.ui.screens.RecordScreen
 import net.azurewebsites.soundsafeguard.ui.screens.SoundSettingScreen
@@ -35,6 +36,9 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         AppBar(title = "SSG")
+                    },
+                    bottomBar = {
+                        BottomNavigationBar(navController = navController)
                     }
                 ) { innerPadding ->
                     NavHost(
