@@ -2,7 +2,6 @@ package net.azurewebsites.soundsafeguard.ui.components
 
 import android.content.res.Resources
 import android.content.Context
-import android.graphics.Color
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
@@ -54,7 +53,7 @@ fun BottomNavigationBar(
 
     //item foreach문을 통해 bottomNav 정의
     BottomNavigation (
-        backgroundColor = Color.White,
+        backgroundColor = androidx.compose.ui.graphics.Color.White,
         contentColor = Color(0xFF00A980)
 
     ){
@@ -74,9 +73,12 @@ fun BottomNavigationBar(
 
                 },
                 icon = {
-                    Icon(item.icon, contentDescription = null)
+                    Icon(item.icon,
+                        contentDescription = null,
+                        tint = if (currentRoute == item.route) Color(0xFF00A980) else Color(0xFF888888))
                 },
-                label = { Text(item.title)}
+                label = { Text(text = item.title,
+                    color = if (currentRoute == item.route) Color(0xFF00A980) else Color(0xFF888888))}
             )
         }
     }
