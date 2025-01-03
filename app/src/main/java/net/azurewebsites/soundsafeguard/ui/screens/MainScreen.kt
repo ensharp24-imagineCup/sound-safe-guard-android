@@ -1,7 +1,9 @@
 package net.azurewebsites.soundsafeguard.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -37,58 +40,72 @@ fun MainScreen() {
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = if (isActivated) Color(0xFFE0F7FA) else Color.White
+        color = Color.Transparent
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        Box(
+            modifier = Modifier.fillMaxSize().then(
+                if (isActivated) {
+                    Modifier.background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFFDFF5F9),
+                                Color(0xFFF5EFE2),
+                                Color(0xFFFFF2C7)
+                            )
+                        )
+                    )
+                } else {
+                    Modifier.background(Color.White)
+                }
+            )
         ) {
-            // 아이콘 및 텍스트
-            Image(
-                painter = painterResource(id = if (isActivated) R.drawable.app_icon_shadow else R.drawable.app_icon_off),
-                contentDescription = null,
-                modifier = Modifier.size(100.dp)
-            )
-            if (isActivated) {
-                CustomText("Activated!", offset)
-            } else {
-                CustomText("Start SSG", offset)
-            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 설명 텍스트
-            if (isActivated) {
-                Text(
-                    "SSG listening to the sound.",
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily(Font(R.font.inter_regular)), // Inter Regular 폰트 설정
-                    lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
-                    //letterSpacing = (-4).sp, // -4%의 글자 간격
-                    color = Color.Gray
+                Image(
+                    painter = painterResource(id = if (isActivated) R.drawable.app_icon_shadow else R.drawable.app_icon_off),
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp)
                 )
-            } else {
-                Text(
-                    "Try the personalized sound alert service!",
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily(Font(R.font.inter_regular)), // Inter Regular 폰트 설정
-                    lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
-                    //letterSpacing = (-4).sp, // -4%의 글자 간격
-                    color = Color.Gray
+                if (isActivated) {
+                    CustomText("Activated!", offset)
+                } else {
+                    CustomText("Start SSG", offset)
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                if (isActivated) {
+                    Text(
+                        "SSG listening to the sound.",
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.inter_regular)),
+                        lineHeight = 18.sp,
+                        color = Color.Gray
+                    )
+                } else {
+                    Text(
+                        "Try the personalized sound alert service!",
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.inter_regular)),
+                        lineHeight = 18.sp,
+                        color = Color.Gray
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Switch(
+                    checked = isActivated,
+                    onCheckedChange = { isActivated = it },
+                    modifier = Modifier.size(77.dp, 32.dp)
                 )
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 스위치
-            Switch(
-                checked = isActivated,
-                onCheckedChange = { isActivated = it },
-                modifier = Modifier.size(77.dp, 32.dp)
-            )
         }
     }
 }

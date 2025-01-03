@@ -48,7 +48,6 @@ fun SoundSettingScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp)
     ) {
-
         SoundSettingText(
             modifier = Modifier.padding(top = 43.4.dp, bottom = 10.dp),
             subModifier = Modifier.padding(bottom = 25.dp)
@@ -154,11 +153,3 @@ fun SoundSettingText(
         modifier = subModifier,
     )
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun SoundSettingPreview() {
-//    SoundSettingScreen(
-//        navController = rememberNavController(),
-//    )
-//}

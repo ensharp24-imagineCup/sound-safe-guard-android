@@ -1,6 +1,8 @@
 package net.azurewebsites.soundsafeguard.ui.components
 
 import android.content.res.Resources
+import android.content.Context
+import android.graphics.Color
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
