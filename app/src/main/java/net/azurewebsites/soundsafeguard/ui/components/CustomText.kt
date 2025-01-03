@@ -22,9 +22,6 @@ fun CustomText(message: String, offset: Offset) {
             fontFamily = FontFamily(Font(R.font.inter_semibold)),
             lineHeight = 18.sp,
             color = Color.Black,
-            shadow = Shadow(
-                color = Color.Gray, offset = offset, blurRadius = 1f
-            )
         )
     )
 } 
