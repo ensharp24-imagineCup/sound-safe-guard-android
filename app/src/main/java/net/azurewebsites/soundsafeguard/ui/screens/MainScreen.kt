@@ -26,16 +26,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import net.azurewebsites.soundsafeguard.R
 import net.azurewebsites.soundsafeguard.ui.components.CustomText
+import net.azurewebsites.soundsafeguard.viewmodel.MainViewModel
 
-@Preview
+
 @Composable
-fun MainScreen() {
-    var isActivated by remember { mutableStateOf(false) }
+fun MainScreen(viewModel: MainViewModel) {
+    var isActivated by viewModel.isActivated
     val offset = Offset(5.0f, 10.0f)
 
     Surface(
@@ -102,7 +103,7 @@ fun MainScreen() {
 
                 Switch(
                     checked = isActivated,
-                    onCheckedChange = { isActivated = it },
+                    onCheckedChange = { viewModel.isActivated.value = it },
                     modifier = Modifier.size(77.dp, 32.dp)
                 )
             }
