@@ -104,7 +104,9 @@ fun MainScreen(
                                     .setStyle(
                                         NotificationCompat.BigTextStyle()
                                             .bigText("catched "+it.label+"!"))
-                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                    .setAutoCancel(true)
+                                    .setPriority(NotificationCompat.PRIORITY_HIGH) // 중요도 설정
+
 
                                 noticeAlarm(context, builder)
                             }
@@ -211,6 +213,7 @@ fun noticeAlarm(
             //권한이 없을 때 처리 함수
             return
         }
+
         notify(R.string.channel_name, builder.build())
     }
 }
