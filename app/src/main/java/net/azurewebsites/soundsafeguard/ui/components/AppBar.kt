@@ -32,7 +32,7 @@ import net.azurewebsites.soundsafeguard.R
 fun AppBar(title: String) {
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
         title = {
             Box(
                 modifier = Modifier.fillMaxWidth(),

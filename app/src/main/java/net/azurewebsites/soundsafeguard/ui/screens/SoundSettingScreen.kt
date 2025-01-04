@@ -165,8 +165,9 @@ fun SoundSettingText(
     Text(
         text = "Sound Setting",
         fontSize = 24.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         modifier = modifier,
+        color = Color.Black
     )
     Text(
         text = "Please select the sound\nyou want to receive alerts for.",

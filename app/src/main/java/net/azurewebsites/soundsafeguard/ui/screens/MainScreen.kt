@@ -86,6 +86,7 @@ fun MainScreen(
                     }
 
                     if (filteredModelOutput.isNotEmpty()) {
+                        //Test용 코드 label -> score 출력
                         val outputStr = filteredModelOutput.sortedBy { -it.score }
                             .joinToString(separator = "\n") { "${it.label} -> ${it.score}" }
                         withContext(Dispatchers.Main) {
@@ -93,7 +94,7 @@ fun MainScreen(
                         }
 
                         val matchingCategories = filteredModelOutput.filter { it.label in selectedSounds }
-
+                        println(matchingCategories)
                         if(matchingCategories.isNotEmpty()){
                             matchingCategories.map{
                                 var builder = NotificationCompat.Builder(context, "SSG_CHANNEL")
@@ -102,10 +103,10 @@ fun MainScreen(
                                     .setContentText(it.label)
                                     .setStyle(
                                         NotificationCompat.BigTextStyle()
-                                            .bigText("Much longer text that cannot fit one line..."))
+                                            .bigText("catched "+it.label+"!"))
                                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-                                //noticeAlarm(context, builder)
+                                noticeAlarm(context, builder)
                             }
                         }
 
@@ -140,10 +141,10 @@ fun MainScreen(
                                 )
                             )
                         )
-                } else {
-                    Modifier.background(Color(0xFFF7F8FA))
-                }
-            )
+                    } else {
+                        Modifier.background(Color(0xFFF7F8FA))
+                    }
+                )
         ) {
             Column(
                 modifier = Modifier
