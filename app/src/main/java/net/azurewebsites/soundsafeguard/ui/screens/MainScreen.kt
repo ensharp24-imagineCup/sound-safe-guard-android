@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,22 +42,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.azurewebsites.soundsafeguard.R
-import net.azurewebsites.soundsafeguard.model.AlarmReceiver.Companion.CHANNEL_ID
 import net.azurewebsites.soundsafeguard.ui.components.CustomText
+import net.azurewebsites.soundsafeguard.viewmodel.MainViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 
 @Composable
 fun MainScreen(
-    viewModel: SoundViewModel
+    viewModel: SoundViewModel,
+    mainViewModel: MainViewModel
+
 ) {
     //사용자가 선택한 사운드
     val selectedSounds by viewModel.selectedSound.collectAsState(initial = emptyList())
-
+    val isActivated by mainViewModel.isActivated
     //현재의 LocalContext
     val context = LocalContext.current
 
-    var isActivated by remember { mutableStateOf(false) }
     var setText by remember { mutableStateOf("hi") }
     val offset = Offset(5.0f, 10.0f)
 
@@ -93,7 +96,7 @@ fun MainScreen(
 
                         if(matchingCategories.isNotEmpty()){
                             matchingCategories.map{
-                                var builder = NotificationCompat.Builder(context, CHANNEL_ID)
+                                var builder = NotificationCompat.Builder(context, "SSG_CHANNEL")
                                     .setSmallIcon(R.drawable.siren_icon)
                                     .setContentTitle("Alarm Notification!")
                                     .setContentText(it.label)
@@ -137,7 +140,6 @@ fun MainScreen(
                                 )
                             )
                         )
-                    )
                 } else {
                     Modifier.background(Color(0xFFF7F8FA))
                 }
@@ -187,7 +189,7 @@ fun MainScreen(
 
                 Switch(
                     checked = isActivated,
-                    onCheckedChange = { viewModel.isActivated.value = it },
+                    onCheckedChange = { mainViewModel.isActivated.value = it },
                     modifier = Modifier.size(77.dp, 32.dp)
                 )
             }

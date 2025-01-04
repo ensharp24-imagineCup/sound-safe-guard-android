@@ -22,7 +22,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import net.azurewebsites.soundsafeguard.R
-import net.azurewebsites.soundsafeguard.model.AlarmReceiver.Companion.CHANNEL_ID
 import net.azurewebsites.soundsafeguard.ui.components.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
@@ -42,7 +41,7 @@ class MainActivity : ComponentActivity() {
             val name = getString(R.string.channel_name)
             val descriptionText = getString(R.string.channel_description)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            val channel = NotificationChannel("SSG_CHANNEL", name, importance).apply {
                 description = descriptionText
             }
             //채널 생성 메소드
@@ -86,7 +85,8 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("main") {
                             MainScreen(
-                                viewModel = viewModel
+                                viewModel = viewModel,
+                                mainViewModel = mainViewModel
                             )
                         }
                         composable("soundSetting") {
