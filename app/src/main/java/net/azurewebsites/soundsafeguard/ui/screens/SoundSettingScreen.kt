@@ -21,17 +21,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import net.azurewebsites.soundsafeguard.R
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.AddButton
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SearchBar
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SoundList
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
-
 @Composable
 fun SoundSettingScreen(
     navController: NavController,
@@ -59,6 +61,7 @@ fun SoundSettingScreen(
             modifier = Modifier
                 .padding(bottom = 10.dp)
                 .align(Alignment.End),
+            color = Color.Black
         )
 
         // Selected Sound Box
@@ -93,7 +96,8 @@ fun SoundSettingScreen(
             fontSize = 18.sp,
             modifier = Modifier
                 .padding(bottom = 10.dp)
-                .align(Alignment.End)
+                .align(Alignment.End),
+            color = Color.Black
         )
 
         Column(
@@ -143,13 +147,22 @@ fun SoundSettingText(
     Text(
         text = "Sound Setting",
         fontSize = 24.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
+        letterSpacing = 0.sp,
+        color = Color.Black,
         modifier = modifier,
-    )
+        fontFamily = FontFamily(Font(R.font.inter_semibold))
+        )
     Text(
         text = "Please select the sound\nyou want to receive alerts for.",
         fontSize = 16.sp,
-        color = Color.Gray,
+        letterSpacing = 0.sp,
+        color = Color(0xFF888888),
         modifier = subModifier,
+        fontFamily = FontFamily(Font(R.font.inter_regular)),
+        lineHeight = 16.sp * 1.1f,
+
+
+
     )
 }
