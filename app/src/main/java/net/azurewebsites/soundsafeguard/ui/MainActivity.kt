@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -29,6 +30,7 @@ import net.azurewebsites.soundsafeguard.ui.screens.RecordScreen
 import net.azurewebsites.soundsafeguard.ui.screens.SoundSettingScreen
 import net.azurewebsites.soundsafeguard.ui.screens.StartScreen
 import net.azurewebsites.soundsafeguard.ui.theme.SoundSafeGuardTheme
+import net.azurewebsites.soundsafeguard.viewmodel.MainViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
@@ -60,6 +62,8 @@ class MainActivity : ComponentActivity() {
         )[SoundViewModel::class.java]
 
         setContent {
+            val mainViewModel : MainViewModel = viewModel()
+
             SoundSafeGuardTheme {
                 val navController = rememberNavController()
 
@@ -76,6 +80,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = "main",
                         Modifier.padding(innerPadding)
                     ) {
+
                         composable("start") {
                             StartScreen()
                         }
@@ -88,6 +93,7 @@ class MainActivity : ComponentActivity() {
                             SoundSettingScreen(
                                 navController = navController,
                                 viewModel = viewModel,
+                                mainViewModel
                             )
                         }
                         composable("record") {

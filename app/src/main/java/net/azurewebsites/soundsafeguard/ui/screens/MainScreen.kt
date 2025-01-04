@@ -21,8 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
@@ -140,10 +137,11 @@ fun MainScreen(
                                 )
                             )
                         )
-                    } else {
-                        Modifier.background(Color.White)
-                    }
-                )
+                    )
+                } else {
+                    Modifier.background(Color(0xFFF7F8FA))
+                }
+            )
         ) {
             Column(
                 modifier = Modifier
@@ -189,7 +187,7 @@ fun MainScreen(
 
                 Switch(
                     checked = isActivated,
-                    onCheckedChange = { isActivated = it },
+                    onCheckedChange = { viewModel.isActivated.value = it },
                     modifier = Modifier.size(77.dp, 32.dp)
                 )
             }
