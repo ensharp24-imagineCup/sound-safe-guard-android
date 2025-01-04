@@ -2,6 +2,7 @@ package net.azurewebsites.soundsafeguard.ui.components.soundsetting
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.azurewebsites.soundsafeguard.R
@@ -78,13 +81,16 @@ fun CategoryComposable() {
             .background(Color.Black, shape = RoundedCornerShape(12.dp))
             .fillMaxHeight()
             .width(120.dp)
-            .padding(11.dp)
+            .padding(start = 11.dp),
+        verticalAlignment = Alignment.CenterVertically
+
     ) {
         Text(
             text = "Category",
             fontSize = 15.sp,
             color = Color.White,
-            modifier = Modifier.align(Alignment.CenterVertically)
+            modifier = Modifier.align(Alignment.CenterVertically),
+            fontFamily = FontFamily(Font(R.font.inter_semibold)),
         )
 
         Spacer(modifier = Modifier.weight(1f))
