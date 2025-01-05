@@ -106,13 +106,9 @@ fun MainScreen(
                                             .bigText("catched "+it.label+"!"))
                                     .setAutoCancel(true)
                                     .setPriority(NotificationCompat.PRIORITY_HIGH) // 중요도 설정
-
-
                                 noticeAlarm(context, builder)
                             }
                         }
-
-
                     }
                 }
                 delay(500)

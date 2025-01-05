@@ -142,14 +142,14 @@ fun SoundSettingScreen(
             }
 
             Spacer(modifier = Modifier.weight(1f))
-
+            /*
             // Add Button
             AddButton(
                 navController = navController,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(38.dp),
-            )
+            )*/
         }
     }
 
@@ -174,5 +174,6 @@ fun SoundSettingText(
         fontSize = 16.sp,
         color = Color.Gray,
         modifier = subModifier,
+        lineHeight = 18.sp
     )
 }
