@@ -51,7 +51,6 @@ import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 fun MainScreen(
     viewModel: SoundViewModel,
     mainViewModel: MainViewModel
-
 ) {
     //사용자가 선택한 사운드
     val selectedSounds by viewModel.selectedSound.collectAsState(initial = emptyList())
@@ -93,17 +92,19 @@ fun MainScreen(
                             setText = outputStr
                         }
 
-                        val matchingCategories = filteredModelOutput.filter { it.label in selectedSounds }
+                        val matchingCategories =
+                            filteredModelOutput.filter { it.label in selectedSounds }
                         println(matchingCategories)
-                        if(matchingCategories.isNotEmpty()){
-                            matchingCategories.map{
+                        if (matchingCategories.isNotEmpty()) {
+                            matchingCategories.map {
                                 var builder = NotificationCompat.Builder(context, "SSG_CHANNEL")
                                     .setSmallIcon(R.drawable.siren_icon)
                                     .setContentTitle("Alarm Notification!")
                                     .setContentText(it.label)
                                     .setStyle(
                                         NotificationCompat.BigTextStyle()
-                                            .bigText("catched "+it.label+"!"))
+                                            .bigText("catched " + it.label + "!")
+                                    )
                                     .setAutoCancel(true)
                                     .setPriority(NotificationCompat.PRIORITY_HIGH) // 중요도 설정
                                 noticeAlarm(context, builder)
@@ -114,11 +115,9 @@ fun MainScreen(
                 delay(500)
             }
             record?.stop()
-        }
-        else{
+        } else {
             record?.stop()
         }
-
     }
 
     Surface(
@@ -164,8 +163,10 @@ fun MainScreen(
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-                Text(text = setText,
-                    color = Color.Black)
+                Text(
+                    text = setText,
+                    color = Color.Black
+                )
                 if (isActivated) {
                     Text(
                         "SSG listening to the sound.",
@@ -199,8 +200,8 @@ fun MainScreen(
 fun noticeAlarm(
     context: Context,
     builder: NotificationCompat.Builder
-){
-    with(NotificationManagerCompat.from(context)){
+) {
+    with(NotificationManagerCompat.from(context)) {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
