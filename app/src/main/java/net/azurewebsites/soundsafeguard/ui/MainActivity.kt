@@ -46,18 +46,16 @@ class MainActivity : ComponentActivity() {
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val coroutineScope = rememberCoroutineScope()
 
-
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
                         AppDrawer(
                             route = navController.currentBackStackEntryAsState().value?.destination?.route ?: "home",
-                            navigateToHome = { navController.navigate("home") },
-                            navigateToSettings = { navController.navigate("settings") },
+                            navigateToMain = { navController.navigate("main") },
+                            navigateToSoundSettings = { navController.navigate("soundSetting") },
                             closeDrawer = { coroutineScope.launch { drawerState.close() } }
                         )
                     }
-
                 ) {
                     Scaffold(
                         topBar = {
