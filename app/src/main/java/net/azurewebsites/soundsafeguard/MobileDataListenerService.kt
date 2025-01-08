@@ -11,7 +11,7 @@ class MobileDataListenerService: WearableListenerService() {
     override fun onDataChanged(dataEvents: DataEventBuffer) {
         super.onDataChanged(dataEvents)
         Log.d("MobileApp onDataChanged", "onDataChanged function of Service is running")
-
+        
         for (event in dataEvents) {
             if (event.type == DataEvent.TYPE_CHANGED) {
                 val dataItem = event.dataItem
