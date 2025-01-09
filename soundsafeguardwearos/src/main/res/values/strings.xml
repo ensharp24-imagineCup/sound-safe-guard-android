@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">SoundSafeGuardWearOS</string>
-    <string name="channel_name">SSG_CHANNEL</string>
-    <string name="channel_description">SSG_TEST</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.

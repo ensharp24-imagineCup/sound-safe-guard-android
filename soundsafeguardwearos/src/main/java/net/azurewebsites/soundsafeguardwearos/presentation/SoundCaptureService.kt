@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
+import net.azurewebsites.soundsafeguardwearos.presentation.NotificationUtils.createNotificationChannel
 
 class SoundCaptureService : Service() {
 
@@ -18,7 +19,7 @@ class SoundCaptureService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        createNotificationChannel()
+        createNotificationChannel(this)
 
         dataClient = Wearable.getDataClient(this)
     }
@@ -59,15 +60,6 @@ class SoundCaptureService : Service() {
             .setSmallIcon(android.R.drawable.ic_btn_speak_now)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
-    }
-
-    private fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            "SOUND_CHANNEL",
-            "Sound Service",
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
 
     override fun onDestroy() {
