@@ -28,26 +28,9 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
 class MainActivity : ComponentActivity() {
-    private fun createNotificationChannel() {
-        //API 26 이상부턴 Notification Channel을 생성해야함
-        //R의 채널명이나 description은 별 제약이 없는듯?
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.channel_name)
-            val descriptionText = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("SSG_CHANNEL", name, importance).apply {
-                description = descriptionText
-            }
-            //채널 생성 메소드
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createNotificationChannel()
-
 
         val viewModel = ViewModelProvider(
             this,
@@ -55,7 +38,7 @@ class MainActivity : ComponentActivity() {
         )[SoundViewModel::class.java]
 
         setContent {
-            val mainViewModel : MainViewModel = viewModel()
+            val mainViewModel: MainViewModel = viewModel()
 
             SoundSafeGuardTheme {
                 val navController = rememberNavController()
@@ -94,8 +77,24 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-
             }
+        }
+    }
+
+    private fun createNotificationChannel() {
+        //API 26 이상부턴 Notification Channel을 생성해야함
+        //R의 채널명이나 description은 별 제약이 없는듯?
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("SSG_CHANNEL", name, importance).apply {
+                description = descriptionText
+            }
+            //채널 생성 메소드
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 }

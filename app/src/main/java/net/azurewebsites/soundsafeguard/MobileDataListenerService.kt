@@ -8,6 +8,11 @@ import com.google.android.gms.wearable.WearableListenerService
 
 class MobileDataListenerService: WearableListenerService() {
 
+    override fun onCreate() {
+        super.onCreate()
+        Log.d("MobileApp onCreate", "onCreate function of Service is running")
+    }
+
     override fun onDataChanged(dataEvents: DataEventBuffer) {
         super.onDataChanged(dataEvents)
         Log.d("MobileApp onDataChanged", "onDataChanged function of Service is running")
