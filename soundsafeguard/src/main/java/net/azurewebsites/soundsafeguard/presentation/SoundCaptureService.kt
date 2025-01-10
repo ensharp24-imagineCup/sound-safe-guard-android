@@ -1,8 +1,6 @@
-package net.azurewebsites.soundsafeguardwearos.presentation
+package net.azurewebsites.soundsafeguard.presentation
 
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
@@ -11,7 +9,7 @@ import androidx.core.app.NotificationCompat
 import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
-import net.azurewebsites.soundsafeguardwearos.presentation.NotificationUtils.createNotificationChannel
+import net.azurewebsites.soundsafeguard.presentation.NotificationUtils.createNotificationChannel
 
 class SoundCaptureService : Service() {
 
@@ -25,15 +23,19 @@ class SoundCaptureService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(1, createNotification())
+        val notification = NotificationCompat.Builder(this, "SSG_CHANNEL")
+            .setContentTitle("Sound SafeGuard")
+            .setContentText("Recording in progress...")
+            .setSmallIcon(android.R.drawable.ic_media_play)
+            .setOngoing(true)
+            .build()
 
-        intent?.let {
-            val command = it.getStringExtra("command")
-            if (command == "startRecording") {
-                val stringInput = it.getStringExtra("string_input") ?: ""
-                val intInput = it.getIntExtra("int_input", 0)
-                sendToMobile(stringInput, intInput)
-            }
+        startForeground(1, notification)
+
+
+        if (intent?.getStringExtra("command") == "startRecording") {
+            // 녹음 시작 로직
+            sendToMobile("Recording Started", 123)
         }
 
         return START_STICKY

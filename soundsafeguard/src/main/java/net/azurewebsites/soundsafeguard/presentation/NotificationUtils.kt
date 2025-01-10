@@ -1,4 +1,4 @@
-package net.azurewebsites.soundsafeguardwearos.presentation
+package net.azurewebsites.soundsafeguard.presentation
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -19,9 +19,9 @@ object NotificationUtils {
                 description = "SSG_TEST"
             }
 
-            with(context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager) {
-                createNotificationChannel(channel)
-            }
+            val notificationManager: NotificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 }

@@ -1,4 +1,4 @@
-package net.azurewebsites.soundsafeguardwearos.presentation
+package net.azurewebsites.soundsafeguard.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
-import net.azurewebsites.soundsafeguardwearos.R
+import net.azurewebsites.soundsafeguard.R
 
 @Composable
 fun RecordingScreen(onRecordingStateChange: (Boolean) -> Unit) {

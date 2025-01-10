@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "net.azurewebsites.soundsafeguardwearos"
+    namespace = "net.azurewebsites.soundsafeguard"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "net.azurewebsites.soundsafeguardwearos"
+        applicationId = "net.azurewebsites.soundsafeguard"
         minSdk = 28
         targetSdk = 34
         versionCode = 1

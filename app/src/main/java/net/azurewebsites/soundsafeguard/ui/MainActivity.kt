@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.common.GoogleApiAvailability
 import net.azurewebsites.soundsafeguard.R
 import net.azurewebsites.soundsafeguard.ui.components.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createNotificationChannel()
+        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this)
 
         val viewModel = ViewModelProvider(
             this,

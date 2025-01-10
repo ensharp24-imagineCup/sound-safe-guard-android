@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SoundSafeGuard"
 include(":app")
-include(":soundsafeguardwearos")
+include(":soundsafeguard")
