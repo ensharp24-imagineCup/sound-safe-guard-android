@@ -58,6 +58,7 @@ dependencies {
     // SavedStateViewModel (ViewModel 에서 상태 저장을 지원)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.navigation.compose.v284)
+
     // icon
     implementation(libs.androidx.material.icons.extended)
 
@@ -69,7 +70,7 @@ dependencies {
     implementation(libs.gson)
 
     // Wearable
-    implementation(libs.play.services.wearable)
+    implementation(libs.play.services.wearable.v1800)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

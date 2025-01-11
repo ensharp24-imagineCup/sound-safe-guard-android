@@ -1,4 +1,4 @@
-package net.azurewebsites.soundsafeguard.presentation
+package net.azurewebsites.soundsafeguard.service
 
 import android.content.Context
 import android.util.Log
@@ -11,7 +11,7 @@ import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.PutDataRequest
 import com.google.android.gms.wearable.Wearable
 
-class SoundCaptureService : DataClient.OnDataChangedListener {
+class DataClientService : DataClient.OnDataChangedListener {
 
     private var receivedMessage = mutableStateOf("")
     fun getReceivedMessage() = receivedMessage.value
@@ -24,14 +24,14 @@ class SoundCaptureService : DataClient.OnDataChangedListener {
         Wearable.getDataClient(context).removeListener(this)
     }
 
-    fun sendDataToMobile(context: Context) {
+    fun sendDataToWearOS(context: Context, message: String) {
         val putDataReq: PutDataRequest = PutDataMapRequest.create("/dataPath").run {
-            dataMap.putString("message_key", "Wear OS 에서 보내는 값입니다.")
+            dataMap.putString("message_key", message)
             asPutDataRequest()
         }
         Wearable.getDataClient(context).putDataItem(putDataReq)
             .addOnSuccessListener {
-                Log.d("MobileDataService", "Wear OS 에서 보내는 값입니다.")
+                Log.d("MobileDataService", "Data sent: $message")
             }
             .addOnFailureListener {
                 Log.e("MobileDataService", "Failed to send data", it)

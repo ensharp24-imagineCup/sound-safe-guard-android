@@ -49,8 +49,7 @@ android {
 }
 
 dependencies {
-    // Wear App
-    implementation(libs.play.services.wearable)
+    // DataClient
     implementation(libs.play.services.wearable.v1800)
 
     implementation(libs.play.services.wearable)

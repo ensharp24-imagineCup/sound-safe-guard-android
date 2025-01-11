@@ -71,6 +71,7 @@ fun MainScreen(
         Log.e("AudioRecord", "Failed to create AudioRecord", e)
         null
     }
+
     //활성화 상태일 때 녹음 시작
     LaunchedEffect(isActivated) {
         if (isActivated) {

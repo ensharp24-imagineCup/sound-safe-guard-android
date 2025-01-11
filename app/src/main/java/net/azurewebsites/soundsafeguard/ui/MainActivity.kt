@@ -15,8 +15,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.common.GoogleApiAvailability
 import net.azurewebsites.soundsafeguard.R
+import net.azurewebsites.soundsafeguard.service.DataClientService
 import net.azurewebsites.soundsafeguard.ui.components.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
@@ -29,15 +29,20 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
 class MainActivity : ComponentActivity() {
+
+    private val dataService = DataClientService()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         createNotificationChannel()
-        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this)
 
         val viewModel = ViewModelProvider(
             this,
             SoundViewModelFactory(applicationContext)
         )[SoundViewModel::class.java]
+
+        dataService.registerDataClient(this)
 
         setContent {
             val mainViewModel: MainViewModel = viewModel()
@@ -69,8 +74,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("soundSetting") {
                             SoundSettingScreen(
-                                navController = navController,
-                                viewModel = viewModel,
+                                soundViewModel = viewModel,
                                 mainViewModel
                             )
                         }
@@ -81,6 +85,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dataService.unregisterDataClient(this)
     }
 
     private fun createNotificationChannel() {
