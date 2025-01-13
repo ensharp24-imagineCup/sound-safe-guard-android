@@ -24,6 +24,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,6 +54,7 @@ fun CustomSoundScreen(
 ){
     val isActivated by mainViewModel.isActivated
     var isRecording by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
 
     Box(
@@ -94,6 +97,11 @@ fun CustomSoundScreen(
                     .clickable(
                         onClick = {
                             isRecording = !isRecording
+                            if (isRecording) {
+                                showDialog = false
+                            } else {
+                                showDialog = true
+                            }
                         },
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -129,6 +137,26 @@ fun CustomSoundScreen(
                 lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
                 //letterSpacing = (-4).sp, // -4%의 글자 간격
                 color = Color(0xFF888888)
+            )
+        }
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Custom Sound") },
+                text = { Text("Please input the name of the sound") },
+                confirmButton = {
+                    Button(onClick = { 
+                        showDialog = false 
+                    }) {
+                        Text("save")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showDialog = false }) {
+                        Text("cancel")
+                    }
+                }
             )
         }
     }
