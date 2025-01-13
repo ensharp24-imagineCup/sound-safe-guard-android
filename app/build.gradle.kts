@@ -72,6 +72,9 @@ dependencies {
     // Wearable
     implementation(libs.play.services.wearable.v1800)
 
+    // Speech To Text
+    implementation("com.microsoft.cognitiveservices.speech:client-sdk:1.42.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

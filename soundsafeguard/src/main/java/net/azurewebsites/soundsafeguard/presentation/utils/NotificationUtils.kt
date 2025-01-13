@@ -1,4 +1,4 @@
-package net.azurewebsites.soundsafeguard.presentation
+package net.azurewebsites.soundsafeguard.presentation.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

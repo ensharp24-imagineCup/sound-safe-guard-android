@@ -7,8 +7,12 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -30,7 +34,7 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
-    private val dataService = DataClientService()
+    private val dataClientService = DataClientService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +46,7 @@ class MainActivity : ComponentActivity() {
             SoundViewModelFactory(applicationContext)
         )[SoundViewModel::class.java]
 
-        dataService.registerDataClient(this)
+        dataClientService.registerDataClient(this)
 
         setContent {
             val mainViewModel: MainViewModel = viewModel()
@@ -89,7 +93,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        dataService.unregisterDataClient(this)
+        dataClientService.unregisterDataClient(this)
     }
 
     private fun createNotificationChannel() {

@@ -1,5 +1,8 @@
 [versions]
+activityComposeVersion = "1.7.2"
+activityKtx = "1.9.3"
 agp = "8.7.3"
+composeMaterialVersion = "1.2.0"
 datastorePreferences = "1.1.1"
 googlePlayServicesWearable = "18.1.0"
 gson = "2.11.0"
@@ -20,8 +23,12 @@ tensorflowLiteTaskAudio = "0.2.0"
 composeMaterial = "1.2.1"
 composeFoundation = "1.2.1"
 coreSplashscreen = "1.0.1"
+ui = "1.7.6"
 
 [libraries]
+androidx-activity-compose-v172 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
+androidx-compose-material-v120 = { module = "androidx.wear.compose:compose-material", version.ref = "composeMaterialVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -52,6 +59,7 @@ tensorflow-lite-task-audio = { module = "org.tensorflow:tensorflow-lite-task-aud
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
 androidx-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "composeFoundation" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

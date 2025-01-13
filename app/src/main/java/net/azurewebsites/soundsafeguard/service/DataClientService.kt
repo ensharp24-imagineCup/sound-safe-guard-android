@@ -7,8 +7,6 @@ import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMapItem
-import com.google.android.gms.wearable.PutDataMapRequest
-import com.google.android.gms.wearable.PutDataRequest
 import com.google.android.gms.wearable.Wearable
 
 class DataClientService : DataClient.OnDataChangedListener {
@@ -17,28 +15,18 @@ class DataClientService : DataClient.OnDataChangedListener {
     fun getReceivedMessage() = receivedMessage.value
 
     fun registerDataClient(context: Context) {
+        Log.d("DataClientService", "Data client registered")
         Wearable.getDataClient(context).addListener(this)
     }
 
     fun unregisterDataClient(context: Context) {
+        Log.d("DataClientService", "Data client unregistered")
         Wearable.getDataClient(context).removeListener(this)
     }
 
-    fun sendDataToWearOS(context: Context, message: String) {
-        val putDataReq: PutDataRequest = PutDataMapRequest.create("/dataPath").run {
-            dataMap.putString("message_key", message)
-            asPutDataRequest()
-        }
-        Wearable.getDataClient(context).putDataItem(putDataReq)
-            .addOnSuccessListener {
-                Log.d("MobileDataService", "Data sent: $message")
-            }
-            .addOnFailureListener {
-                Log.e("MobileDataService", "Failed to send data", it)
-            }
-    }
-
     override fun onDataChanged(dataEventBuffer: DataEventBuffer) {
+        Log.d("DataClientService", "Data changed")
+
         for (event in dataEventBuffer) {
             if (event.type == DataEvent.TYPE_CHANGED) {
                 val path = event.dataItem.uri.path

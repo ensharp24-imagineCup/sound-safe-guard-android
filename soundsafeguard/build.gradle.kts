@@ -52,6 +52,14 @@ dependencies {
     // DataClient
     implementation(libs.play.services.wearable.v1800)
 
+    // Speech To Text
+    implementation("com.microsoft.cognitiveservices.speech:client-sdk:1.42.0")
+
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.activity.compose.v172)
+    implementation(libs.androidx.compose.material.v120)
+    implementation(libs.ui)
+
     implementation(libs.play.services.wearable)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
