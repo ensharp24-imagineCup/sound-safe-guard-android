@@ -82,7 +82,8 @@ fun SoundItem(
             Text(
                 text = soundName,
                 fontSize = 16.sp,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                color = Color.Black
             )
 
             // Add button
@@ -91,15 +92,17 @@ fun SoundItem(
                     Icon(
                         imageVector = Icons.Default.Cancel,
                         contentDescription = "",
+                        tint = Color.Black
                     )
                 } else {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add Icon",
+                        tint = Color.Black
                     )
                 }
             }
         }
-        HorizontalDivider(thickness = 1.dp)
+        HorizontalDivider(thickness = 0.5.dp)
     }
 }

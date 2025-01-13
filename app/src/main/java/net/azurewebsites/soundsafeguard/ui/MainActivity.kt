@@ -1,5 +1,9 @@
 package net.azurewebsites.soundsafeguard.ui
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,8 +22,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppBar
-import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppDrawer
+import net.azurewebsites.soundsafeguard.R
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
+import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppDrawer
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
 import net.azurewebsites.soundsafeguard.ui.screens.RecordScreen
 import net.azurewebsites.soundsafeguard.ui.screens.SoundSettingScreen
@@ -30,8 +35,26 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
 class MainActivity : ComponentActivity() {
+    private fun createNotificationChannel() {
+        //API 26 이상부턴 Notification Channel을 생성해야함
+        //R의 채널명이나 description은 별 제약이 없는듯?
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("SSG_CHANNEL", name, importance).apply {
+                description = descriptionText
+            }
+            //채널 생성 메소드
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createNotificationChannel()
+
 
         val viewModel = ViewModelProvider(
             this,
@@ -70,12 +93,14 @@ class MainActivity : ComponentActivity() {
                             startDestination = "main",
                             Modifier.padding(innerPadding)
                         ) {
-
                             composable("start") {
                                 StartScreen()
                             }
                             composable("main") {
-                                MainScreen(mainViewModel)
+                                MainScreen(
+                                    viewModel = viewModel,
+                                    mainViewModel = mainViewModel
+                                )
                             }
                             composable("soundSetting") {
                                 SoundSettingScreen(

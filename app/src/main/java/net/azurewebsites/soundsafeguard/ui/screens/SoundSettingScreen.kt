@@ -27,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import net.azurewebsites.soundsafeguard.ui.components.soundsetting.AddButton
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SearchBar
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SoundList
 import net.azurewebsites.soundsafeguard.viewmodel.MainViewModel
@@ -142,14 +141,6 @@ fun SoundSettingScreen(
             }
 
             Spacer(modifier = Modifier.weight(1f))
-
-            // Add Button
-            AddButton(
-                navController = navController,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(38.dp),
-            )
         }
     }
 
@@ -165,13 +156,15 @@ fun SoundSettingText(
     Text(
         text = "Sound Setting",
         fontSize = 24.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         modifier = modifier,
+        color = Color.Black
     )
     Text(
         text = "Please select the sound\nyou want to receive alerts for.",
         fontSize = 16.sp,
         color = Color.Gray,
         modifier = subModifier,
+        lineHeight = 18.sp
     )
 }
