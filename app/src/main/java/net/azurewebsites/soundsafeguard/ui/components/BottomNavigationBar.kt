@@ -4,6 +4,7 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -22,6 +23,7 @@ fun BottomNavigationBar(
     //navBar item
     val items = listOf(
         BottomNavigationItem.Home,
+        BottomNavigationItem.Microphone,
         BottomNavigationItem.Setting
     )
 
@@ -73,6 +75,7 @@ fun BottomNavigationBar(
 sealed class BottomNavigationItem(
     val route: String, val icon: ImageVector, val title: String
 ) {
-    object Home : BottomNavigationItem("main", Icons.Default.Home, "main")
+    object Home : BottomNavigationItem("main", Icons.Default.Home, "Main")
+    object Microphone : BottomNavigationItem("customSoundSetting", Icons.Default.Mic, "CustomSound")
     object Setting : BottomNavigationItem("soundSetting", Icons.Default.Settings, "Settings")
 }

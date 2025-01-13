@@ -25,6 +25,7 @@ import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppB
 import net.azurewebsites.soundsafeguard.R
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
 import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppDrawer
+import net.azurewebsites.soundsafeguard.ui.screens.CustomSoundScreen
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
 import net.azurewebsites.soundsafeguard.ui.screens.RecordScreen
 import net.azurewebsites.soundsafeguard.ui.screens.SoundSettingScreen
@@ -90,7 +91,7 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         NavHost(
                             navController,
-                            startDestination = "main",
+                            startDestination = "customSoundSetting",
                             Modifier.padding(innerPadding)
                         ) {
                             composable("start") {
@@ -106,11 +107,18 @@ class MainActivity : ComponentActivity() {
                                 SoundSettingScreen(
                                     navController = navController,
                                     viewModel = viewModel,
-                                    mainViewModel
+                                    mainViewModel = mainViewModel
                                 )
                             }
                             composable("record") {
                                 RecordScreen()
+                            }
+                            composable("customSoundSetting"){
+                                CustomSoundScreen(
+                                    navController = navController,
+                                    viewModel = viewModel,
+                                    mainViewModel = mainViewModel
+                                )
                             }
                         }
                     }
