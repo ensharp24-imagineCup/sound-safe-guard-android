@@ -21,9 +21,10 @@ class WearMainActivity : ComponentActivity() {
         setTheme(android.R.style.Theme_DeviceDefault)
         setContent {
             SoundSafeGuardTheme {
-                RecordingScreen { inputString ->
-                    dataSender.sendDataToMobile(this, inputString)
-                }
+//                RecordingScreen { inputString ->
+//                    dataSender.sendDataToMobile(this, inputString)
+//                }
+                VoiceInputScreen(this)
             }
         }
     }

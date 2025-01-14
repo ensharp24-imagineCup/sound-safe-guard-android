@@ -67,65 +67,57 @@ fun RecordingScreen(sendDataToMobile: (String) -> Unit) {
     }
 }
 
-//@Composable
-//fun VoiceInputScreen(context: Context) {
-//    // 음성 인식 결과를 저장할 상태
-//    var voiceInputText by remember { mutableStateOf("결과가 여기에 표시됩니다.") }
-//
-//    // ActivityResult를 통해 음성 입력 결과 처리
-//    val voiceInputLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.StartActivityForResult()
-//    ) { result ->
-//        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-//            val matches = result.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-//            if (!matches.isNullOrEmpty()) {
-//                Log.d("VoiceInputScreen", "음성 입력 결과: ${matches[0]}")
-//                voiceInputText = matches[0] // 첫 번째 결과를 표시
-//            } else {
-//                Toast.makeText(
-//                    context,
-//                    "결과를 가져올 수 없습니다.",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//        }
-//    }
-//
-//    // 음성 입력 Intent를 시작하는 함수
-//    fun startVoiceRecognition() {
-//        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-//            putExtra(
-//                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-//                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-//            )
-//            putExtra(RecognizerIntent.EXTRA_PROMPT, "말씀하세요")
-//        }
-//        try {
-//            voiceInputLauncher.launch(intent)
-//        } catch (e: Exception) {
-//            Toast.makeText(
-//                context,
-//                "음성 입력을 사용할 수 없습니다.",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
-//    }
-//
-//    // UI 구성
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(16.dp),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Column(
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.spacedBy(16.dp)
-//        ) {
-//            Button(onClick = { startVoiceRecognition() }) {
-//                Text(text = "음성 입력 시작")
-//            }
-//            Text(text = voiceInputText)
-//        }
-//    }
-//}
+@Composable
+fun VoiceInputScreen(context: Context) {
+    // 음성 인식 결과를 저장할 상태
+    var voiceInputText by remember { mutableStateOf("결과가 여기에 표시됩니다.") }
+
+    // ActivityResult를 통해 음성 입력 결과 처리
+    val voiceInputLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { activityResult ->
+        activityResult.data?.let { data ->
+            val results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            voiceInputText = results?.get(0) ?: "None"
+        }
+    }
+
+
+    // 음성 입력 Intent를 시작하는 함수
+    fun startVoiceRecognition() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+            putExtra(RecognizerIntent.EXTRA_PROMPT, "말씀하세요")
+        }
+        try {
+            voiceInputLauncher.launch(intent)
+        } catch (e: Exception) {
+            Toast.makeText(
+                context,
+                "음성 입력을 사용할 수 없습니다.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    // UI 구성
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Button(onClick = { startVoiceRecognition() }) {
+                Text(text = "음성 입력 시작")
+            }
+            Text(text = "Voice Result: $voiceInputText")
+        }
+    }
+}
