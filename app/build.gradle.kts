@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.fir.declarations.builder.buildScript
 import java.util.Properties
 
 val localProperties = Properties()
@@ -11,9 +12,15 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
+
+
 android {
+
+
     namespace = "net.azurewebsites.soundsafeguard"
     compileSdk = 35
+
+
 
     defaultConfig {
         buildConfigField(
@@ -69,6 +76,8 @@ android {
     }
 }
 
+
+
 dependencies {
     // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -89,6 +98,8 @@ dependencies {
     // Gson
     implementation(libs.gson)
 
+    //TarsosDSP
+    implementation(libs.tarsosdsp)
     // Wearable
     implementation(libs.play.services.wearable.v1800)
 
@@ -113,6 +124,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.tensorflow.lite)
 
     implementation(libs.material3)
 }
