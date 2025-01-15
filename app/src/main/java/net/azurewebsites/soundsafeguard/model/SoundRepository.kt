@@ -34,7 +34,7 @@ class SoundRepository(private val context: Context) {
 
         if (currentSound != null) return
 
-        val soundList = readSoundListFromAssets("sound_list.json").sorted()
+        val soundList = readSoundListFromAssets().sorted()
 
         if (soundList.isEmpty()) {
             println("sound_list.json 파일이 비어 있습니다.")
@@ -100,9 +100,9 @@ class SoundRepository(private val context: Context) {
         }
     }
 
-    private fun readSoundListFromAssets(fileName: String): List<String> {
+    private fun readSoundListFromAssets(): List<String> {
         return try {
-            val inputStream = context.assets.open(fileName)
+            val inputStream = context.assets.open("sound_list.json")
             val json = inputStream.bufferedReader().use { it.readText() }
             Gson().fromJson(json, object : TypeToken<List<String>>() {}.type)
         } catch (e: Exception) {

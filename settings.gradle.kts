@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SoundSafeGuard"
 include(":app")
+include(":soundsafeguard")

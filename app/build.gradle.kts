@@ -1,4 +1,11 @@
 import org.jetbrains.kotlin.fir.declarations.builder.buildScript
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
 
 plugins {
     alias(libs.plugins.android.application)
@@ -16,6 +23,17 @@ android {
 
 
     defaultConfig {
+        buildConfigField(
+            "String",
+            "AZURE_SUBSCRIPTION_KEY",
+            "\"${localProperties["AZURE_SUBSCRIPTION_KEY"] ?: ""}\""
+        )
+        buildConfigField(
+            "String",
+            "AZURE_REGION",
+            "\"${localProperties["AZURE_REGION"] ?: ""}\""
+        )
+
         applicationId = "net.azurewebsites.soundsafeguard"
         minSdk = 24
         targetSdk = 35
@@ -46,6 +64,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -68,6 +87,7 @@ dependencies {
     // SavedStateViewModel (ViewModel 에서 상태 저장을 지원)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.navigation.compose.v284)
+
     // icon
     implementation(libs.androidx.material.icons.extended)
 
@@ -80,6 +100,11 @@ dependencies {
 
     //TarsosDSP
     implementation(libs.tarsosdsp)
+    // Wearable
+    implementation(libs.play.services.wearable.v1800)
+
+    // Speech To Text
+    implementation("com.microsoft.cognitiveservices.speech:client-sdk:1.42.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -91,6 +116,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.tensorflow.lite.task.audio)
+    implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -99,4 +125,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.tensorflow.lite)
+
+    implementation(libs.material3)
 }

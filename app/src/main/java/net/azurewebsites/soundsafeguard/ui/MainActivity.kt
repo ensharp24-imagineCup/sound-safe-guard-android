@@ -1,29 +1,35 @@
 package net.azurewebsites.soundsafeguard.ui
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.azurewebsites.soundsafeguard.R
-import net.azurewebsites.soundsafeguard.ui.components.AppBar
+import net.azurewebsites.soundsafeguard.service.AzureSTT
+import net.azurewebsites.soundsafeguard.service.DataClientService
+import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
+import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppDrawer
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
 import net.azurewebsites.soundsafeguard.ui.screens.RecordScreen
 import net.azurewebsites.soundsafeguard.ui.screens.SoundSettingScreen
@@ -34,6 +40,102 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
 class MainActivity : ComponentActivity() {
+
+    private val dataClientService = DataClientService()
+    private val azureSTT = AzureSTT()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        createNotificationChannel()
+
+        val soundViewModel = ViewModelProvider(
+            this,
+            SoundViewModelFactory(applicationContext)
+        )[SoundViewModel::class.java]
+
+        dataClientService.registerDataClient(this)
+
+        setContent {
+            val mainViewModel: MainViewModel = viewModel()
+
+            SoundSafeGuardTheme {
+                val navController = rememberNavController()
+                val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+                val coroutineScope = rememberCoroutineScope()
+
+                ModalNavigationDrawer(
+                    drawerState = drawerState,
+                    drawerContent = {
+                        AppDrawer(
+                            route = navController.currentBackStackEntryAsState().value?.destination?.route
+                                ?: "home",
+                            navigateToMain = { navController.navigate("main") },
+                            navigateToSoundSettings = { navController.navigate("soundSetting") },
+                            closeDrawer = { coroutineScope.launch { drawerState.close() } }
+                        )
+                    }
+                ) {
+                    Scaffold(
+                        topBar = {
+                            AppBar(
+                                title = "SSG",
+                                onMenuClick = { coroutineScope.launch { drawerState.open() } })
+                        },
+                        bottomBar = {
+                            BottomNavigationBar(navController = navController)
+                        }
+                    ) { innerPadding ->
+                        NavHost(
+                            navController,
+                            startDestination = "main",
+                            Modifier.padding(innerPadding)
+                        ) {
+                            composable("start") {
+                                StartScreen()
+                            }
+                            composable("main") {
+                                MainScreen(
+                                    viewModel = soundViewModel,
+                                    mainViewModel = mainViewModel
+                                )
+                            }
+                            composable("soundSetting") {
+                                SoundSettingScreen(
+                                    soundViewModel,
+                                    mainViewModel
+                                )
+                            }
+                            composable("record") {
+                                RecordScreen()
+                            }
+                            composable("main") {
+                                MainScreen(
+                                    viewModel = soundViewModel,
+                                    mainViewModel = mainViewModel
+                                )
+                            }
+                            composable("soundSetting") {
+                                SoundSettingScreen(
+                                    soundViewModel = soundViewModel,
+                                    mainViewModel
+                                )
+                            }
+                            composable("record") {
+                                RecordScreen()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dataClientService.unregisterDataClient(this)
+    }
+
     private fun createNotificationChannel() {
         //API 26 이상부턴 Notification Channel을 생성해야함
         //R의 채널명이나 description은 별 제약이 없는듯?
@@ -50,59 +152,16 @@ class MainActivity : ComponentActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        createNotificationChannel()
 
-
-        val viewModel = ViewModelProvider(
-            this,
-            SoundViewModelFactory(applicationContext)
-        )[SoundViewModel::class.java]
-
-        setContent {
-            val mainViewModel : MainViewModel = viewModel()
-
-            SoundSafeGuardTheme {
-                val navController = rememberNavController()
-
-                Scaffold(
-                    topBar = {
-                        AppBar(title = "SSG")
-                    },
-                    bottomBar = {
-                        BottomNavigationBar(navController = navController)
-                    }
-                ) { innerPadding ->
-                    NavHost(
-                        navController,
-                        startDestination = "main",
-                        Modifier.padding(innerPadding)
-                    ) {
-
-                        composable("start") {
-                            StartScreen()
-                        }
-                        composable("main") {
-                            MainScreen(
-                                viewModel = viewModel,
-                                mainViewModel = mainViewModel
-                            )
-                        }
-                        composable("soundSetting") {
-                            SoundSettingScreen(
-                                navController = navController,
-                                viewModel = viewModel,
-                                mainViewModel
-                            )
-                        }
-                        composable("record") {
-                            RecordScreen()
-                        }
-                    }
-                }
-
-            }
+    /*
+    * Wear OS에서 받은 오디오 데이터를 사용하는 메서드
+    * Azure Speech to Text API를 사용하여 음성을 텍스트로 변환
+     */
+    private fun convertSpeechToText(audioData: ByteArray) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val result =
+                azureSTT.recognizeSpeechFromByteArray(audioData, getString(R.string.korean_KR))
+            Log.d("AzureSTT", "Recognized Text: $result")
         }
     }
 }

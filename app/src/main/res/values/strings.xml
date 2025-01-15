@@ -2,4 +2,16 @@
     <string name="app_name">SoundSafeGuard</string>
     <string name="channel_name">SSG_CHANNEL</string>
     <string name="channel_description">SSG_TEST</string>
+
+    <!--    STT 언어 설정-->
+    <!--    호주-->
+    <string name="english_AU">en-AU</string>
+    <!--    캐나다-->
+    <string name="english_CA">en-CA</string>
+    <!--    영국-->
+    <string name="english_GB">en-GB	</string>
+    <!--    미국-->
+    <string name="english_US">en-US</string>
+    <!--    한국-->
+    <string name="korean_KR">ko-KR</string>
 </resources>
