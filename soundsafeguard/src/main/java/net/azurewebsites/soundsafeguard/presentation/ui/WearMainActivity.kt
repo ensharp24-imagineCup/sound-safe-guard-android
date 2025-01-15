@@ -14,9 +14,9 @@ import net.azurewebsites.soundsafeguardwearos.presentation.theme.SoundSafeGuardT
 
 class WearMainActivity : ComponentActivity() {
 
-    private val dataSender = DataSender(Wearable.getDataClient(this))
-    private val audioRecorderManager = AudioRecorderManager(this, dataSender)
-    private val permissionHandler = PermissionHandler(this)
+    private val dataSender by lazy { DataSender(Wearable.getDataClient(this)) }
+    private val audioRecorderManager by lazy { AudioRecorderManager(this, dataSender) }
+    private val permissionHandler by lazy { PermissionHandler(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -26,9 +26,10 @@ class WearMainActivity : ComponentActivity() {
         createNotificationChannel(this)
 
         // 권한 처리
-        val requestPermissionLauncher = permissionHandler.createPermissionLauncher()
-        if (!permissionHandler.isAudioPermissionGranted()) {
-            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+        with(permissionHandler.createPermissionLauncher()) {
+            if (!permissionHandler.isAudioPermissionGranted()) {
+                launch(Manifest.permission.RECORD_AUDIO)
+            }
         }
 
         setTheme(android.R.style.Theme_DeviceDefault)
