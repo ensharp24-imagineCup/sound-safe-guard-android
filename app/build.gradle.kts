@@ -1,3 +1,11 @@
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -8,6 +16,17 @@ android {
     compileSdk = 35
 
     defaultConfig {
+        buildConfigField(
+            "String",
+            "AZURE_SUBSCRIPTION_KEY",
+            "\"${localProperties["AZURE_SUBSCRIPTION_KEY"] ?: ""}\""
+        )
+        buildConfigField(
+            "String",
+            "AZURE_REGION",
+            "\"${localProperties["AZURE_REGION"] ?: ""}\""
+        )
+
         applicationId = "net.azurewebsites.soundsafeguard"
         minSdk = 24
         targetSdk = 35
@@ -38,6 +57,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -58,6 +78,7 @@ dependencies {
     // SavedStateViewModel (ViewModel 에서 상태 저장을 지원)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.navigation.compose.v284)
+
     // icon
     implementation(libs.androidx.material.icons.extended)
 
@@ -67,6 +88,12 @@ dependencies {
 
     // Gson
     implementation(libs.gson)
+
+    // Wearable
+    implementation(libs.play.services.wearable.v1800)
+
+    // Speech To Text
+    implementation("com.microsoft.cognitiveservices.speech:client-sdk:1.42.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

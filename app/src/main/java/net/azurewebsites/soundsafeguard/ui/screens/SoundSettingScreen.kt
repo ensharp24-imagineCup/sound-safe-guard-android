@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SearchBar
 import net.azurewebsites.soundsafeguard.ui.components.soundsetting.SoundList
 import net.azurewebsites.soundsafeguard.viewmodel.MainViewModel
@@ -34,13 +33,12 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 
 @Composable
 fun SoundSettingScreen(
-    navController: NavController,
-    viewModel: SoundViewModel,
+    soundViewModel: SoundViewModel,
     mainViewModel: MainViewModel
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    val sounds by viewModel.sounds.collectAsState(initial = emptyList())
-    val selectedSounds by viewModel.selectedSound.collectAsState(initial = emptyList())
+    val sounds by soundViewModel.sounds.collectAsState(initial = emptyList())
+    val selectedSounds by soundViewModel.selectedSound.collectAsState(initial = emptyList())
     val isActivated by mainViewModel.isActivated
 
     Box(
@@ -98,7 +96,7 @@ fun SoundSettingScreen(
                     SoundList(
                         sounds = selectedSounds,
                         isSelected = true,
-                        onSelect = { viewModel.unselectSound(it)},
+                        onSelect = { soundViewModel.unselectSound(it)},
                     )
                 }
             }
@@ -136,7 +134,7 @@ fun SoundSettingScreen(
                     sounds = sounds,
                     searchQuery = searchQuery,
                     isSelected = false,
-                    onSelect = { viewModel.selectSound(it) },
+                    onSelect = { soundViewModel.selectSound(it) },
                 )
             }
 
