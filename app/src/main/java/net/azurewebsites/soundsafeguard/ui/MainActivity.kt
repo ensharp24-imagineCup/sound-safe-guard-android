@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -15,7 +16,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.azurewebsites.soundsafeguard.R
+import net.azurewebsites.soundsafeguard.service.AzureSTT
 import net.azurewebsites.soundsafeguard.service.DataClientService
 import net.azurewebsites.soundsafeguard.ui.components.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
@@ -31,13 +36,14 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 class MainActivity : ComponentActivity() {
 
     private val dataClientService = DataClientService()
+    private val azureSTT = AzureSTT()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         createNotificationChannel()
 
-        val viewModel = ViewModelProvider(
+        val soundViewModel = ViewModelProvider(
             this,
             SoundViewModelFactory(applicationContext)
         )[SoundViewModel::class.java]
@@ -68,13 +74,13 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("main") {
                             MainScreen(
-                                viewModel = viewModel,
+                                viewModel = soundViewModel,
                                 mainViewModel = mainViewModel
                             )
                         }
                         composable("soundSetting") {
                             SoundSettingScreen(
-                                soundViewModel = viewModel,
+                                soundViewModel = soundViewModel,
                                 mainViewModel
                             )
                         }
@@ -106,6 +112,18 @@ class MainActivity : ComponentActivity() {
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    /*
+    * Wear OS에서 받은 오디오 데이터를 사용하는 메서드
+    * Azure Speech to Text API를 사용하여 음성을 텍스트로 변환
+     */
+    private fun convertSpeechToText(audioData: ByteArray) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val result =
+                azureSTT.recognizeSpeechFromByteArray(audioData, getString(R.string.korean_KR))
+            Log.d("AzureSTT", "Recognized Text: $result")
         }
     }
 }

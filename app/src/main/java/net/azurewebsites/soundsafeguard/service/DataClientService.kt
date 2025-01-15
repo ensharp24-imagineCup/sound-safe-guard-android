@@ -10,15 +10,8 @@ import com.google.android.gms.wearable.Wearable
 
 class DataClientService : DataClient.OnDataChangedListener {
 
-    fun registerDataClient(context: Context) {
-        Wearable.getDataClient(context).addListener(this)
-    }
-
-    fun unregisterDataClient(context: Context) {
-        Wearable.getDataClient(context).removeListener(this)
-    }
-
     override fun onDataChanged(dataEventBuffer: DataEventBuffer) {
+        Log.d("DataClientService", "Data received")
         for (event in dataEventBuffer) {
             if (event.type == DataEvent.TYPE_CHANGED && event.dataItem.uri.path == "/audio_record") {
                 val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
@@ -30,6 +23,15 @@ class DataClientService : DataClient.OnDataChangedListener {
         }
     }
 
+    fun registerDataClient(context: Context) {
+        Wearable.getDataClient(context).addListener(this)
+    }
+
+    fun unregisterDataClient(context: Context) {
+        Wearable.getDataClient(context).removeListener(this)
+    }
+
+    // Wear OS에서 받은 오디오 데이터를 사용하는 메서드
     private fun useAudio(audioData: ByteArray?, timestamp: Long) {
         Log.d(
             "DataClientService",

@@ -1,3 +1,11 @@
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -8,6 +16,17 @@ android {
     compileSdk = 35
 
     defaultConfig {
+        buildConfigField(
+            "String",
+            "AZURE_SUBSCRIPTION_KEY",
+            "\"${localProperties["AZURE_SUBSCRIPTION_KEY"] ?: ""}\""
+        )
+        buildConfigField(
+            "String",
+            "AZURE_REGION",
+            "\"${localProperties["AZURE_REGION"] ?: ""}\""
+        )
+
         applicationId = "net.azurewebsites.soundsafeguard"
         minSdk = 24
         targetSdk = 35
@@ -38,6 +57,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
