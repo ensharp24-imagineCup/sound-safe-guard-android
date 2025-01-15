@@ -1,22 +1,23 @@
 package net.azurewebsites.soundsafeguard.presentation.service
 
-import android.content.Context
 import android.util.Log
+import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.PutDataRequest
-import com.google.android.gms.wearable.Wearable
+import java.util.Date
 
-class DataSender {
+class DataSender(private val dataClient: DataClient) {
 
-    fun sendDataToMobile(context: Context, message: String) {
-        val putDataReq: PutDataRequest = PutDataMapRequest.create("/dataPath").run {
-            dataMap.putString("message_key", message)
+    fun sendDataToMobile(audioData: ByteArray) {
+        val putDataReq: PutDataRequest = PutDataMapRequest.create("/audio_record").run {
+            dataMap.putByteArray("audio", audioData)
+            dataMap.putLong("timestamp", Date().time)
             asPutDataRequest()
         }
 
-        Wearable.getDataClient(context).putDataItem(putDataReq)
+        dataClient.putDataItem(putDataReq)
             .addOnSuccessListener {
-                Log.d("MobileDataService", message)
+                Log.d("MobileDataService", "Data sent successfully")
             }
             .addOnFailureListener {
                 Log.e("MobileDataService", "Failed to send data", it)
