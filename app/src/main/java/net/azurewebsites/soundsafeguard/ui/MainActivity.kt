@@ -30,6 +30,7 @@ import net.azurewebsites.soundsafeguard.service.DataClientService
 import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
 import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppDrawer
+import net.azurewebsites.soundsafeguard.ui.screens.CustomSoundScreen
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
 import net.azurewebsites.soundsafeguard.ui.screens.RecordScreen
 import net.azurewebsites.soundsafeguard.ui.screens.SoundSettingScreen
@@ -117,12 +118,21 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("soundSetting") {
                                 SoundSettingScreen(
-                                    soundViewModel = soundViewModel,
-                                    mainViewModel
+                                    navController = navController,
+                                    viewModel = viewModel,
+                                    mainViewModel = mainViewModel
+
                                 )
                             }
                             composable("record") {
                                 RecordScreen()
+                            }
+                            composable("customSoundSetting"){
+                                CustomSoundScreen(
+                                    navController = navController,
+                                    viewModel = viewModel,
+                                    mainViewModel = mainViewModel
+                                )
                             }
                         }
                     }
