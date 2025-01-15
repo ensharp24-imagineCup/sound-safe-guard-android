@@ -99,7 +99,7 @@ dependencies {
     implementation(libs.gson)
 
     //TarsosDSP
-    implementation(libs.tarsosdsp)
+    // implementation(libs.tarsosdsp)
     // Wearable
     implementation(libs.play.services.wearable.v1800)
 
