@@ -118,10 +118,8 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("soundSetting") {
                                 SoundSettingScreen(
-                                    navController = navController,
-                                    viewModel = viewModel,
+                                    soundViewModel = soundViewModel,
                                     mainViewModel = mainViewModel
-
                                 )
                             }
                             composable("record") {
@@ -130,7 +128,7 @@ class MainActivity : ComponentActivity() {
                             composable("customSoundSetting"){
                                 CustomSoundScreen(
                                     navController = navController,
-                                    viewModel = viewModel,
+                                    viewModel = soundViewModel,
                                     mainViewModel = mainViewModel
                                 )
                             }
