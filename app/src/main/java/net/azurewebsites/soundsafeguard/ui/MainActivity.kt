@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
 import net.azurewebsites.soundsafeguard.R
 import net.azurewebsites.soundsafeguard.service.AzureSTT
 import net.azurewebsites.soundsafeguard.service.DataClientService
-import net.azurewebsites.soundsafeguard.ui.components.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
 import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppDrawer
@@ -69,7 +68,8 @@ class MainActivity : ComponentActivity() {
                     drawerState = drawerState,
                     drawerContent = {
                         AppDrawer(
-                            route = navController.currentBackStackEntryAsState().value?.destination?.route ?: "home",
+                            route = navController.currentBackStackEntryAsState().value?.destination?.route
+                                ?: "home",
                             navigateToMain = { navController.navigate("main") },
                             navigateToSoundSettings = { navController.navigate("soundSetting") },
                             closeDrawer = { coroutineScope.launch { drawerState.close() } }
@@ -78,12 +78,14 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Scaffold(
                         topBar = {
-                            AppBar(title = "SSG", onMenuClick = { coroutineScope.launch { drawerState.open() }})
+                            AppBar(
+                                title = "SSG",
+                                onMenuClick = { coroutineScope.launch { drawerState.open() } })
                         },
                         bottomBar = {
                             BottomNavigationBar(navController = navController)
                         }
-                                            ) { innerPadding ->
+                    ) { innerPadding ->
                         NavHost(
                             navController,
                             startDestination = "main",
@@ -94,37 +96,34 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("main") {
                                 MainScreen(
-                                    viewModel = viewModel,
+                                    viewModel = soundViewModel,
                                     mainViewModel = mainViewModel
                                 )
                             }
                             composable("soundSetting") {
                                 SoundSettingScreen(
-                                    navController = navController,
-                                    viewModel = viewModel,
+                                    soundViewModel,
                                     mainViewModel
                                 )
                             }
                             composable("record") {
                                 RecordScreen()
                             }
-                        }
-                    }
-                }
-                        composable("main") {
-                            MainScreen(
-                                viewModel = soundViewModel,
-                                mainViewModel = mainViewModel
-                            )
-                        }
-                        composable("soundSetting") {
-                            SoundSettingScreen(
-                                soundViewModel = soundViewModel,
-                                mainViewModel
-                            )
-                        }
-                        composable("record") {
-                            RecordScreen()
+                            composable("main") {
+                                MainScreen(
+                                    viewModel = soundViewModel,
+                                    mainViewModel = mainViewModel
+                                )
+                            }
+                            composable("soundSetting") {
+                                SoundSettingScreen(
+                                    soundViewModel = soundViewModel,
+                                    mainViewModel
+                                )
+                            }
+                            composable("record") {
+                                RecordScreen()
+                            }
                         }
                     }
                 }
