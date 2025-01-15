@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -20,9 +21,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppBar
 import net.azurewebsites.soundsafeguard.R
+import net.azurewebsites.soundsafeguard.service.AzureSTT
+import net.azurewebsites.soundsafeguard.service.DataClientService
+import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
 import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppDrawer
 import net.azurewebsites.soundsafeguard.ui.screens.CustomSoundScreen
@@ -36,34 +41,24 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
 class MainActivity : ComponentActivity() {
-    private fun createNotificationChannel() {
-        //API 26 이상부턴 Notification Channel을 생성해야함
-        //R의 채널명이나 description은 별 제약이 없는듯?
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.channel_name)
-            val descriptionText = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("SSG_CHANNEL", name, importance).apply {
-                description = descriptionText
-            }
-            //채널 생성 메소드
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
+
+    private val dataClientService = DataClientService()
+    private val azureSTT = AzureSTT()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         createNotificationChannel()
 
-
-        val viewModel = ViewModelProvider(
+        val soundViewModel = ViewModelProvider(
             this,
             SoundViewModelFactory(applicationContext)
         )[SoundViewModel::class.java]
 
+        dataClientService.registerDataClient(this)
+
         setContent {
-            val mainViewModel : MainViewModel = viewModel()
+            val mainViewModel: MainViewModel = viewModel()
 
             SoundSafeGuardTheme {
                 val navController = rememberNavController()
@@ -74,7 +69,8 @@ class MainActivity : ComponentActivity() {
                     drawerState = drawerState,
                     drawerContent = {
                         AppDrawer(
-                            route = navController.currentBackStackEntryAsState().value?.destination?.route ?: "home",
+                            route = navController.currentBackStackEntryAsState().value?.destination?.route
+                                ?: "home",
                             navigateToMain = { navController.navigate("main") },
                             navigateToSoundSettings = { navController.navigate("soundSetting") },
                             closeDrawer = { coroutineScope.launch { drawerState.close() } }
@@ -83,7 +79,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Scaffold(
                         topBar = {
-                            AppBar(title = "SSG", onMenuClick = { coroutineScope.launch { drawerState.open() }})
+                            AppBar(
+                                title = "SSG",
+                                onMenuClick = { coroutineScope.launch { drawerState.open() } })
                         },
                         bottomBar = {
                             BottomNavigationBar(navController = navController)
@@ -91,7 +89,7 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         NavHost(
                             navController,
-                            startDestination = "customSoundSetting",
+                            startDestination = "main",
                             Modifier.padding(innerPadding)
                         ) {
                             composable("start") {
@@ -99,7 +97,22 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("main") {
                                 MainScreen(
-                                    viewModel = viewModel,
+                                    viewModel = soundViewModel,
+                                    mainViewModel = mainViewModel
+                                )
+                            }
+                            composable("soundSetting") {
+                                SoundSettingScreen(
+                                    soundViewModel,
+                                    mainViewModel
+                                )
+                            }
+                            composable("record") {
+                                RecordScreen()
+                            }
+                            composable("main") {
+                                MainScreen(
+                                    viewModel = soundViewModel,
                                     mainViewModel = mainViewModel
                                 )
                             }
@@ -108,6 +121,7 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     viewModel = viewModel,
                                     mainViewModel = mainViewModel
+
                                 )
                             }
                             composable("record") {
@@ -124,6 +138,40 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dataClientService.unregisterDataClient(this)
+    }
+
+    private fun createNotificationChannel() {
+        //API 26 이상부턴 Notification Channel을 생성해야함
+        //R의 채널명이나 description은 별 제약이 없는듯?
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("SSG_CHANNEL", name, importance).apply {
+                description = descriptionText
+            }
+            //채널 생성 메소드
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    /*
+    * Wear OS에서 받은 오디오 데이터를 사용하는 메서드
+    * Azure Speech to Text API를 사용하여 음성을 텍스트로 변환
+     */
+    private fun convertSpeechToText(audioData: ByteArray) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val result =
+                azureSTT.recognizeSpeechFromByteArray(audioData, getString(R.string.korean_KR))
+            Log.d("AzureSTT", "Recognized Text: $result")
         }
     }
 }

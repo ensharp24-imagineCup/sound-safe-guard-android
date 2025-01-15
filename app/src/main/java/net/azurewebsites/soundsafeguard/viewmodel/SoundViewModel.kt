@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.azurewebsites.soundsafeguard.model.SoundRepository
 
-class SoundViewModel(private val repository: SoundRepository): ViewModel() {
+class SoundViewModel(private val repository: SoundRepository) : ViewModel() {
     val sounds: Flow<List<String>> = repository.sounds
     val selectedSound: Flow<List<String>> = repository.selectedSounds
 
@@ -32,8 +32,9 @@ class SoundViewModel(private val repository: SoundRepository): ViewModel() {
     }
 }
 
-class SoundViewModelFactory(private val context: Context): ViewModelProvider.Factory {
-    override fun <T: ViewModel> create(modelClass: Class<T>): T {
+class SoundViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SoundViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return SoundViewModel(SoundRepository(context)) as T
