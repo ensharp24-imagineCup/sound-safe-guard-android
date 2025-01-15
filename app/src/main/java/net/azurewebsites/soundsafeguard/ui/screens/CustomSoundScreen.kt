@@ -1,5 +1,6 @@
 package net.azurewebsites.soundsafeguard.ui.screens
 
+import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -21,7 +22,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,10 +29,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.Mic
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,6 +53,13 @@ import androidx.navigation.NavController
 import net.azurewebsites.soundsafeguard.R
 import net.azurewebsites.soundsafeguard.viewmodel.MainViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import org.json.JSONArray
+import java.io.InputStream
+import kotlinx.coroutines.delay
 
 @Composable
 fun CustomSoundScreen(
@@ -65,6 +71,29 @@ fun CustomSoundScreen(
     var isRecording by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
     var showConfirmationDialog by remember { mutableStateOf(false) }
+    var selectedCategory by remember { mutableStateOf("Select Category") }
+    var expanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val categories = remember { mutableStateOf(listOf<String>()) }
+    var dotCount by remember { mutableStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        val inputStream: InputStream = context.assets.open("sound_list.json")
+        val jsonString = inputStream.bufferedReader().use { it.readText() }
+        val jsonArray = JSONArray(jsonString)
+        val categoryList = mutableListOf<String>()
+
+        for (i in 0 until jsonArray.length()) {
+            categoryList.add(jsonArray.getString(i))
+        }
+
+        categories.value = categoryList
+
+        while (true) {
+            delay(800)
+            dotCount = (dotCount + 1) % 4
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize().then(
@@ -94,7 +123,48 @@ fun CustomSoundScreen(
                 subModifier = Modifier.padding(bottom = 25.dp)
             )
 
-            Spacer(modifier = Modifier.height(150.dp))
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .padding(top = 16.dp)
+                    .background(Color.White, shape = RoundedCornerShape(5))
+                    .clickable { expanded = !expanded },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Category",
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.Black,
+                )
+                Text(
+                    text = selectedCategory + " >",
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.Gray,
+                )
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                categories.value.forEach { category ->
+                    DropdownMenuItem(
+                        text = { Text(category) },
+                        onClick = {
+                            selectedCategory = category
+                            expanded = false
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(80.dp))
 
             Box(
                 modifier = Modifier
@@ -140,10 +210,10 @@ fun CustomSoundScreen(
 
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = if (isRecording) "Recording..." else "Waiting...",
+                text = if (isRecording) "Recording" else "Waiting${".".repeat(dotCount)}",
                 fontSize = 24.sp,
                 fontFamily = FontFamily(Font(R.font.inter_regular)),
-                lineHeight = 18.sp, // 16포인트의 110%에 해당하는 줄 간격
+                lineHeight = 18.sp,
                 color = Color(0xFF888888)
             )
         }
@@ -213,6 +283,7 @@ fun CustomSoundScreen(
 
                             Button(
                                 onClick = {
+                                    handleSave(selectedCategory, soundName)
                                     showDialog = false
                                     showConfirmationDialog = true
                                 },
@@ -302,6 +373,12 @@ fun ConfirmationDialog(onDismiss: () -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
+                Icon(
+                    imageVector = Icons.Filled.CheckCircleOutline,
+                    contentDescription = "CheckCircleOutline Icon",
+                    modifier = Modifier.size(65.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     "Do you want to save the recording?",
                     fontSize = 16.sp,
@@ -363,4 +440,8 @@ fun ConfirmationDialog(onDismiss: () -> Unit) {
             }
         }
     }
+}
+
+fun handleSave(category: String, soundName: String) {
+
 }
