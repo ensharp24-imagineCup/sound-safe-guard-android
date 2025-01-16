@@ -62,7 +62,6 @@ class AzureSTT(
                     return@withContext result.text
                 } else {
                     println("Recognition failed. Reason: ${result.reason}")
-                    println("Error details: ${result.text}")
                     return@withContext null
                 }
             } catch (e: Exception) {

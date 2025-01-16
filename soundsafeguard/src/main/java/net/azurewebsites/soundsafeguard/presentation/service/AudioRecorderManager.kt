@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.azurewebsites.soundsafeguard.presentation.utils.AudioConfig
 
@@ -15,10 +17,11 @@ class AudioRecorderManager(
     private val context: Context,
     private val dataSender: DataSender
 ) {
+    private val permissionHandler = PermissionHandler(context as ComponentActivity)
     private val audioConfig = AudioConfig()
 
     fun startRecording() {
-        if (!PermissionHandler(context as ComponentActivity).isAudioPermissionGranted()) {
+        if (!permissionHandler.isAudioPermissionGranted()) {
             Toast.makeText(
                 context,
                 "RECORD_AUDIO permission is required to record audio",
@@ -46,7 +49,7 @@ class AudioRecorderManager(
                 }
 
                 // 3000ms 대기
-                Thread.sleep(3000)
+                delay(3000)
             }
 
             audioRecord.stop()
@@ -59,7 +62,7 @@ class AudioRecorderManager(
     }
 
     private fun setupAudioRecord(): AudioRecord? {
-        if (!PermissionHandler(context as ComponentActivity).isAudioPermissionGranted()) {
+        if (!permissionHandler.isAudioPermissionGranted()) {
             (context as Activity).runOnUiThread {
                 Toast.makeText(
                     context,

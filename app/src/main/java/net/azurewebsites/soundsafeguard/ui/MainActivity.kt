@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -21,14 +20,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.azurewebsites.soundsafeguard.R
-import net.azurewebsites.soundsafeguard.service.AzureSTT
 import net.azurewebsites.soundsafeguard.service.DataClientService
-import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
+import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppBar
 import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppDrawer
 import net.azurewebsites.soundsafeguard.ui.screens.CustomSoundScreen
 import net.azurewebsites.soundsafeguard.ui.screens.MainScreen
@@ -42,8 +38,7 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
-    private val dataClientService = DataClientService()
-    private val azureSTT = AzureSTT()
+    private val dataClientService = DataClientService(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +50,7 @@ class MainActivity : ComponentActivity() {
             SoundViewModelFactory(applicationContext)
         )[SoundViewModel::class.java]
 
-        dataClientService.registerDataClient(this)
+        dataClientService.registerDataClient()
 
         setContent {
             val mainViewModel: MainViewModel = viewModel()
@@ -141,7 +136,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        dataClientService.unregisterDataClient(this)
+        dataClientService.unregisterDataClient()
     }
 
     private fun createNotificationChannel() {
@@ -158,18 +153,6 @@ class MainActivity : ComponentActivity() {
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
-        }
-    }
-
-    /*
-    * Wear OS에서 받은 오디오 데이터를 사용하는 메서드
-    * Azure Speech to Text API를 사용하여 음성을 텍스트로 변환
-     */
-    private fun convertSpeechToText(audioData: ByteArray) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val result =
-                azureSTT.recognizeSpeechFromByteArray(audioData, getString(R.string.korean_KR))
-            Log.d("AzureSTT", "Recognized Text: $result")
         }
     }
 }
