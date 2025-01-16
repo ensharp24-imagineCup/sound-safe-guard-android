@@ -6,6 +6,7 @@ import com.microsoft.cognitiveservices.speech.SpeechRecognizer
 import com.microsoft.cognitiveservices.speech.audio.AudioConfig
 import com.microsoft.cognitiveservices.speech.audio.AudioStreamFormat
 import com.microsoft.cognitiveservices.speech.audio.PullAudioInputStream
+import com.microsoft.cognitiveservices.speech.audio.PullAudioInputStreamCallback
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.azurewebsites.soundsafeguard.BuildConfig
@@ -20,33 +21,53 @@ class AzureSTT(
     * @param language 언어 코드
     * @return 변환된 텍스트
      */
-    suspend fun recognizeSpeechFromByteArray(audioData: ByteArray, language: String): String? = withContext(
-        Dispatchers.IO) {
-        try {
-            val speechConfig = SpeechConfig.fromSubscription(subscriptionKey, serviceRegion)
-            speechConfig.speechRecognitionLanguage = language
+    suspend fun recognizeSpeechFromByteArray(audioData: ByteArray, language: String): String? =
+        withContext(
+            Dispatchers.IO
+        ) {
+            try {
+                val speechConfig = SpeechConfig.fromSubscription(subscriptionKey, serviceRegion)
+                speechConfig.speechRecognitionLanguage = language
 
-            // Audio Input 생성
-            val audioFormat = AudioStreamFormat.getWaveFormatPCM(16000, 16, 1) // 샘플링 속도, 비트 심도, 채널
-            val audioStream = PullAudioInputStream.create(ByteArrayAudioStream(audioData), audioFormat)
-            val audioConfig = AudioConfig.fromStreamInput(audioStream)
+                // Audio Input 생성
+                val audioFormat =
+                    AudioStreamFormat.getWaveFormatPCM(16000, 16, 1) // 샘플링 속도, 비트 심도, 채널
+                val audioStream =
+                    PullAudioInputStream.create(object : PullAudioInputStreamCallback() {
+                        private var position: Int = 0
 
-            // Speech Recognizer 생성
-            val recognizer = SpeechRecognizer(speechConfig, audioConfig)
+                        override fun read(buffer: ByteArray): Int {
+                            val remaining = audioData.size - position
+                            if (remaining <= 0) return 0
 
-            // 음성 인식 실행
-            val result = recognizer.recognizeOnceAsync().get()
+                            val count = buffer.size.coerceAtMost(remaining)
+                            System.arraycopy(audioData, position, buffer, 0, count)
+                            position += count
+                            return count
+                        }
 
-            if (result.reason == ResultReason.RecognizedSpeech) {
-                return@withContext result.text
-            } else {
-                println("Recognition failed. Reason: ${result.reason}")
-                println("Error details: ${result.text}")
+                        override fun close() {
+                            position = audioData.size
+                        }
+                    }, audioFormat)
+                val audioConfig = AudioConfig.fromStreamInput(audioStream)
+
+                // Speech Recognizer 생성
+                val recognizer = SpeechRecognizer(speechConfig, audioConfig)
+
+                // 음성 인식 실행
+                val result = recognizer.recognizeOnceAsync().get()
+
+                if (result.reason == ResultReason.RecognizedSpeech) {
+                    return@withContext result.text
+                } else {
+                    println("Recognition failed. Reason: ${result.reason}")
+                    println("Error details: ${result.text}")
+                    return@withContext null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
                 return@withContext null
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return@withContext null
         }
-    }
 }

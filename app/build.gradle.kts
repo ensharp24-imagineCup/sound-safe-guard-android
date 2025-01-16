@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.fir.declarations.builder.buildScript
 import java.util.Properties
 
 val localProperties = Properties()
@@ -12,15 +11,9 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
-
-
 android {
-
-
     namespace = "net.azurewebsites.soundsafeguard"
     compileSdk = 35
-
-
 
     defaultConfig {
         buildConfigField(
