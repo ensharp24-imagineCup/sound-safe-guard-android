@@ -60,12 +60,14 @@ import androidx.compose.ui.platform.LocalContext
 import org.json.JSONArray
 import java.io.InputStream
 import kotlinx.coroutines.delay
+import net.azurewebsites.soundsafeguard.model.AudioRecoder
 
 @Composable
 fun CustomSoundScreen(
     navController: NavController,
     viewModel: SoundViewModel,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    audioRecoder: AudioRecoder
 ){
     val isActivated by mainViewModel.isActivated
     var isRecording by remember { mutableStateOf(false) }
@@ -177,8 +179,10 @@ fun CustomSoundScreen(
                         onClick = {
                             isRecording = !isRecording
                             if (isRecording) {
+                                audioRecoder.startCustomRecord() // 녹음 시작
                                 showDialog = false
                             } else {
+                                audioRecoder.stopCustomRecord() // 녹음 종료
                                 showDialog = true
                             }
                         },
@@ -283,7 +287,7 @@ fun CustomSoundScreen(
 
                             Button(
                                 onClick = {
-                                    handleSave(selectedCategory, soundName)
+                                    handleSave(selectedCategory, soundName, audioRecoder.recordedAudio)
                                     showDialog = false
                                     showConfirmationDialog = true
                                 },
@@ -442,6 +446,10 @@ fun ConfirmationDialog(onDismiss: () -> Unit) {
     }
 }
 
-fun handleSave(category: String, soundName: String) {
+// 녹음된 파일, 카테고리, 이름을 처리하는 로직을 추가
+fun handleSave(category: String, soundName: String, recordedAudio: ByteArray?) {
+    if (recordedAudio != null) {
+        // 파일 저장 로직을 여기에 추가해주십쇼 행님 카테고리, 이름, 오디오 값 가져왔으니까 이거 머신러닝 서버?에 올리든 해서 학습시키는 걸로 채워주시면 됩니다잉
 
+    }
 }

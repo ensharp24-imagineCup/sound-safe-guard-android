@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.Interpreter
+import java.io.ByteArrayOutputStream
 
 class AudioRecoder(context: Context, interpreter: Interpreter) {
     private val sampleRate = 16000
@@ -36,6 +37,9 @@ class AudioRecoder(context: Context, interpreter: Interpreter) {
     private var audioRecord: AudioRecord? = null
 
     val audioQueue = ArrayDeque<Float>()
+
+    public var recordedAudio: ByteArray? = null  // 녹음된 오디오 데이터를 저장할 변수
+    private lateinit var audioOutputStream: ByteArrayOutputStream  // ByteArrayOutputStream을 클래스 프로퍼티로 정의
 
     //생성자
     init {
@@ -74,7 +78,7 @@ class AudioRecoder(context: Context, interpreter: Interpreter) {
             val floatBuffer = FloatArray(15600)
 
             while (isRecording) {
-                val readCount = audioRecord?.read(audioBuffer, 0, 15600) ?: 0
+                val readCount = audioRecord?.read(audioBuffer, 0, 15600) ?: 0//read 음성 불러옴 음성데이터라고 생각
                 println(readCount)
                 // float 변환 및 처리
                 for (i in 0 until readCount) {
@@ -122,4 +126,34 @@ class AudioRecoder(context: Context, interpreter: Interpreter) {
         audioRecord?.release()
     }
 
+
+    fun startCustomRecord() {
+        // 녹음 시작
+        isRecording = true
+        audioRecord?.startRecording()
+
+        // 녹음된 데이터를 저장할 ByteArrayOutputStream 생성
+        audioOutputStream = ByteArrayOutputStream()  // 여기서 초기화
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val audioBuffer = ByteArray(bufferSize)
+
+            while (isRecording) {
+                val readCount = audioRecord?.read(audioBuffer, 0, bufferSize) ?: 0
+                if (readCount > 0) {
+                    audioOutputStream.write(audioBuffer, 0, readCount)  // 읽은 데이터를 출력 스트림에 추가
+                }
+            }
+        }
+    }
+
+    fun stopCustomRecord() {
+        isRecording = false
+        audioRecord?.stop()
+        audioRecord?.release()
+
+        // 녹음된 데이터를 ByteArray로 변환하여 변수에 저장
+        recordedAudio = audioOutputStream.toByteArray()
+        audioOutputStream.close()  // 스트림 닫기
+    }
 }
