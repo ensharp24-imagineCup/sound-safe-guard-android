@@ -48,6 +48,11 @@ class DataClientService(private val context: Context) : DataClient.OnDataChanged
      * Azure Speech to Text API를 사용하여 음성을 텍스트로 변환
      */
     private fun convertSpeechToText(audioData: ByteArray, language: String) {
+        val size=  audioData.size
+        val sampleData = audioData.take(size)
+        Log.d("AudioRecorderManager", "Audio data size: $size")
+        Log.d("AudioRecorderManager", "Audio sample data: $sampleData")
+
         CoroutineScope(Dispatchers.Main).launch {
             val result =
                 azureSTT.recognizeSpeechFromByteArray(audioData, language)
