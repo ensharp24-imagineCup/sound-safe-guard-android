@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "net.azurewebsites.soundsafeguard"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "net.azurewebsites.soundsafeguard"
@@ -55,6 +55,9 @@ dependencies {
     // Speech To Text
     implementation("com.microsoft.cognitiveservices.speech:client-sdk:1.42.0")
 
+    implementation("androidx.compose.material:material-icons-core:1.5.0")
+    implementation("androidx.compose.material:material-icons-extended:1.5.0")
+
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.activity.compose.v172)
     implementation(libs.androidx.compose.material.v120)
@@ -68,6 +71,8 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.material3.android)
+    implementation(libs.androidx.material.android)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)

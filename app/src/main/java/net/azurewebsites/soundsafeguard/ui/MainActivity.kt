@@ -104,21 +104,6 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("soundSetting") {
                                 SoundSettingScreen(
-                                    soundViewModel,
-                                    mainViewModel
-                                )
-                            }
-                            composable("record") {
-                                RecordScreen()
-                            }
-                            composable("main") {
-                                MainScreen(
-                                    viewModel = soundViewModel,
-                                    mainViewModel = mainViewModel
-                                )
-                            }
-                            composable("soundSetting") {
-                                SoundSettingScreen(
                                     soundViewModel = soundViewModel,
                                     mainViewModel = mainViewModel
                                 )
