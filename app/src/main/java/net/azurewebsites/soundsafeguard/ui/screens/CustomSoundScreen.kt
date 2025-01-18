@@ -1,6 +1,5 @@
 package net.azurewebsites.soundsafeguard.ui.screens
 
-import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -67,7 +66,7 @@ fun CustomSoundScreen(
     navController: NavController,
     viewModel: SoundViewModel,
     mainViewModel: MainViewModel,
-    audioRecoder: AudioRecoder
+    audioRecorder: AudioRecoder
 ){
     val isActivated by mainViewModel.isActivated
     var isRecording by remember { mutableStateOf(false) }
@@ -179,10 +178,10 @@ fun CustomSoundScreen(
                         onClick = {
                             isRecording = !isRecording
                             if (isRecording) {
-                                audioRecoder.startCustomRecord() // 녹음 시작
+                                audioRecorder.startCustomRecord() // 녹음 시작
                                 showDialog = false
                             } else {
-                                audioRecoder.stopCustomRecord() // 녹음 종료
+                                audioRecorder.stopCustomRecord() // 녹음 종료
                                 showDialog = true
                             }
                         },
@@ -287,7 +286,7 @@ fun CustomSoundScreen(
 
                             Button(
                                 onClick = {
-                                    handleSave(selectedCategory, soundName, audioRecoder.recordedAudio)
+                                    handleSave(selectedCategory, soundName, audioRecorder.recordedAudio)
                                     showDialog = false
                                     showConfirmationDialog = true
                                 },

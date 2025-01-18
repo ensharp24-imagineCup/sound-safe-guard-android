@@ -37,10 +37,6 @@ fun RecordScreen() {
 
     val assetManager = net.azurewebsites.soundsafeguard.model.AssetManager()
     val interpreter = assetManager.loadInterpreter(context, "yamnet.tflite")
-    val inputShape = interpreter.getInputTensor(0).shape()  // 입력 텐서 크기
-    val outputShape = interpreter.getOutputTensor(0).shape()  // 출력 텐서 크기
-    println("Input shape: ${inputShape.joinToString()}")
-    println("Output shape: ${outputShape.joinToString()}")
     //AudioRecorder 생성 (녹음, 데이터 출력 등 )
     val audioRecoder = AudioRecoder(context, interpreter)
 

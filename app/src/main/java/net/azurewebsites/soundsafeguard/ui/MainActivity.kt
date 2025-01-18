@@ -22,6 +22,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import net.azurewebsites.soundsafeguard.R
+import net.azurewebsites.soundsafeguard.model.AssetManager
+import net.azurewebsites.soundsafeguard.model.AudioRecoder
 import net.azurewebsites.soundsafeguard.service.DataClientService
 import net.azurewebsites.soundsafeguard.ui.components.BottomNavigationBar
 import net.azurewebsites.soundsafeguard.ui.components.modalnavigationdrawer.AppBar
@@ -42,6 +44,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //AudioRecorder 생성 (녹음, 데이터 출력 등 )
+        val audioRecorder =
+            AudioRecoder(this, AssetManager().loadInterpreter(this, "yamnet.tflite"))
 
         createNotificationChannel()
 
@@ -120,11 +126,12 @@ class MainActivity : ComponentActivity() {
                             composable("record") {
                                 RecordScreen()
                             }
-                            composable("customSoundSetting"){
+                            composable("customSoundSetting") {
                                 CustomSoundScreen(
                                     navController = navController,
                                     viewModel = soundViewModel,
-                                    mainViewModel = mainViewModel
+                                    mainViewModel = mainViewModel,
+                                    audioRecorder = audioRecorder
                                 )
                             }
                         }
