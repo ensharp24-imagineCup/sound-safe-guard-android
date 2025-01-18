@@ -8,7 +8,7 @@ import java.util.Date
 
 class DataSender(private val dataClient: DataClient) {
 
-    fun sendDataToMobile(audioData: ByteArray) {
+    fun sendDataTosendDataToMobileMobile(audioData: ByteArray) {
         val putDataReq: PutDataRequest = PutDataMapRequest.create("/audio_record").run {
             dataMap.putByteArray("audio", audioData)
             dataMap.putLong("timestamp", Date().time)
