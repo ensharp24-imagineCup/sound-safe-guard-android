@@ -7,9 +7,13 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.provider.MediaStore.Audio
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.Interpreter
@@ -20,6 +24,8 @@ class AudioRecoder(context: Context, interpreter: Interpreter) {
 
     val frameSize = 15600  // 16kHz * 0.96초 <- Yamnet의 프레임 단위
     val hopSize = 7800     // 16kHz * 0.48초 <- 윈도우 단위
+
+    private var recordingJob: Job? = null
 
     //버퍼 형태 정의
     private val bufferSize = AudioRecord.getMinBufferSize(
@@ -37,6 +43,10 @@ class AudioRecoder(context: Context, interpreter: Interpreter) {
     private var audioRecord: AudioRecord? = null
 
     val audioQueue = ArrayDeque<Float>()
+
+    val audioClassifier = AudioClassifier(context)
+
+    var label by mutableStateOf("")
 
     public var recordedAudio: ByteArray? = null  // 녹음된 오디오 데이터를 저장할 변수
     private lateinit var audioOutputStream: ByteArrayOutputStream  // ByteArrayOutputStream을 클래스 프로퍼티로 정의
@@ -73,7 +83,7 @@ class AudioRecoder(context: Context, interpreter: Interpreter) {
         audioRecord?.startRecording()
         isRecording = true
 
-        CoroutineScope(Dispatchers.IO).launch {
+        recordingJob = CoroutineScope(Dispatchers.IO).launch {
             val audioBuffer = ShortArray(15600)
             val floatBuffer = FloatArray(15600)
 
@@ -88,7 +98,7 @@ class AudioRecoder(context: Context, interpreter: Interpreter) {
                 println("BB"+floatBuffer.joinToString (", "))
                 // 오디오 프레임 처리
                 processAudioFrame(floatBuffer)
-                delay(1000)
+                delay(100)
             }
         }
     }
@@ -107,23 +117,25 @@ class AudioRecoder(context: Context, interpreter: Interpreter) {
 
             // 슬라이딩 윈도우 적용: 앞부분 hopSize만큼 제거
             repeat(hopSize) { audioQueue.removeFirst() }
+
         }
     }
 
     // YAMNet 모델 실행
-    fun runYamNetModel(frame: FloatArray): Array<FloatArray> {
+    fun runYamNetModel(frame: FloatArray) {
         // 모델 호출 및 결과 처리
         val outputBuffer = Array(1) { FloatArray(521) }
-        println("AA:"+outputBuffer[0].joinToString(", "))  // 1024차원 임베딩 벡터 출력
         this.interpreter!!.run(frame, outputBuffer)
-        return outputBuffer
+        println("AA:"+outputBuffer[0].joinToString(", "))  // 1024차원 임베딩 벡터 출력
+        label = audioClassifier.getTopLabel(outputBuffer[0])
+        println("label:"+label)
     }
 
     //녹화 정지
     fun stopRecord(){
         isRecording=false
-        audioRecord?.stop()
-        audioRecord?.release()
+        recordingJob?.cancel()
+        recordingJob = null
     }
 
 

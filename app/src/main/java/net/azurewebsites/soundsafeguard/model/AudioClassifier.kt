@@ -27,7 +27,10 @@ class AudioClassifier (context: Context) {
     fun getTopLabel(outputScores: FloatArray) : String{
         //max값을 가진 index 출력
         val maxIndex = outputScores.indices.maxByOrNull { outputScores[it] } ?:-1
-
+        //적정 score값을 넘기지 못하면 공백 반환
+        if(outputScores[maxIndex]<0.41){
+            return ""
+        }
         //최대 인덱스 값을 결과 값으로 보내기
         if(maxIndex != -1){
             return labelList[maxIndex]
