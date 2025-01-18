@@ -1,5 +1,6 @@
 package net.azurewebsites.soundsafeguard.service
 
+import com.microsoft.cognitiveservices.speech.CancellationDetails
 import com.microsoft.cognitiveservices.speech.ResultReason
 import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechRecognizer
@@ -11,10 +12,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.azurewebsites.soundsafeguard.BuildConfig
 
-class AzureSTT(
-    private val subscriptionKey: String = BuildConfig.AZURE_SUBSCRIPTION_KEY,
+class AzureSTT {
+
+    private val subscriptionKey: String = BuildConfig.AZURE_SUBSCRIPTION_KEY
     private val serviceRegion: String = BuildConfig.AZURE_REGION
-) {
+
     /*
     * Azure Speech to Text API를 이용하여 음성을 텍스트로 변환하는 함수
     * @param audioData 변환할 음성 데이터
@@ -50,6 +52,7 @@ class AzureSTT(
                             position = audioData.size
                         }
                     }, audioFormat)
+
                 val audioConfig = AudioConfig.fromStreamInput(audioStream)
 
                 // Speech Recognizer 생성
@@ -58,15 +61,19 @@ class AzureSTT(
                 // 음성 인식 실행
                 val result = recognizer.recognizeOnceAsync().get()
 
-                if (result.reason == ResultReason.RecognizedSpeech) {
-                    return@withContext result.text
-                } else {
-                    println("Recognition failed. Reason: ${result.reason}")
-                    return@withContext null
+                when (result.reason) {
+                    ResultReason.RecognizedSpeech -> return@withContext result.text
+                    ResultReason.NoMatch -> return@withContext "음성을 인식하지 못했습니다."
+                    ResultReason.Canceled -> {
+                        val cancellationDetails = CancellationDetails.fromResult(result)
+                        return@withContext "음성 인식이 취소되었습니다: ${cancellationDetails.reason}. ${cancellationDetails.errorDetails}"
+                    }
+
+                    else -> return@withContext "알 수 없는 오류가 발생했습니다."
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                return@withContext null
+                return@withContext e.message
             }
         }
 }

@@ -30,6 +30,7 @@ class AudioRecorderManager(
             return
         }
 
+        val completeAudioData = mutableListOf<Byte>()
         audioConfig.isRecording.value = true
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -42,14 +43,22 @@ class AudioRecorderManager(
             audioRecord.startRecording()
             val buffer = ByteArray(audioConfig.bufferSize)
 
+
             while (audioConfig.isRecording.value) {
                 val bytesRead = audioRecord.read(buffer, 0, buffer.size)
                 if (bytesRead > 0) {
-                    dataSender.sendDataToMobile(buffer.copyOf(bytesRead))
-                }
+                    synchronized(completeAudioData) {
+                        completeAudioData.addAll(buffer.copyOf(bytesRead).toList())
 
-                // 3000ms 대기
-                delay(3000)
+                        // 누적 데이터 크기가 1초 분량(32,000바이트) 이상이면 처리
+                        if (completeAudioData.size >= 32000) {
+                            val audioData = completeAudioData.toByteArray()
+
+                            dataSender.sendDataToMobile(audioData)
+                            completeAudioData.clear()
+                        }
+                    }
+                }
             }
 
             audioRecord.stop()
