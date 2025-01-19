@@ -107,7 +107,7 @@ fun MainScreen(
                                             .bigText("catched " + it.label + "!")
                                     )
                                     .setAutoCancel(true)
-                                    .setPriority(NotificationCompat.PRIORITY_HIGH) // 중요도 설정
+                                    .setPriority(NotificationCompat.PRIORITY_MAX) // 중요도 설정
                                 noticeAlarm(context, builder)
                             }
                         }
@@ -212,6 +212,6 @@ fun noticeAlarm(
             return
         }
 
-        notify(R.string.channel_name, builder.build())
+        notify(1, builder.build())
     }
 }
