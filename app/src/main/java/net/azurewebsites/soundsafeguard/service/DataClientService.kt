@@ -1,7 +1,12 @@
 package net.azurewebsites.soundsafeguard.service
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
@@ -58,15 +63,39 @@ class DataClientService(private val context: Context, audioRecoder: AudioRecoder
      * Azure Speech to Text API를 사용하여 음성을 텍스트로 변환
      */
     private fun convertSpeechToText(audioData: ByteArray, language: String) {
-        val size=  audioData.size
-        val sampleData = audioData.take(size)
-        Log.d("AudioRecorderManager", "Audio data size: $size")
-        Log.d("AudioRecorderManager", "Audio sample data: $sampleData")
-
         CoroutineScope(Dispatchers.Main).launch {
             val result =
                 azureSTT.recognizeSpeechFromByteArray(audioData, language)
             Log.d("AzureSTT", "Recognized Text: $result")
+
+            if (result != null && (result.contains("상혁") || result.contains("시원"))) {
+                noticeAlarm()
+            }
+        }
+    }
+
+    private fun noticeAlarm() {
+        with(NotificationManagerCompat.from(context)) {
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+
+            notify(
+                2, NotificationCompat.Builder(context, "SSG_CHANNEL")
+                    .setSmallIcon(R.drawable.siren_icon)
+                    .setContentTitle("Alarm Notification!")
+                    .setContentText("Someone calls me!")
+                    .setStyle(
+                        NotificationCompat.BigTextStyle()
+                            .bigText("Someone calls me. Please check it!")
+                    )
+                    .setAutoCancel(true)
+                    .setPriority(NotificationCompat.PRIORITY_MAX).build()
+            )
         }
     }
 }

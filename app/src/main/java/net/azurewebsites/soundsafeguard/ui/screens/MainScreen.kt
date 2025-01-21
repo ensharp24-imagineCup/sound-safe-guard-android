@@ -83,6 +83,7 @@ fun MainScreen(
                             selectedSounds.filter { it in label }
                         println(matchingCategories)
                         if (matchingCategories.isNotEmpty()) {
+                            matchingCategories.map {
                             var builder = NotificationCompat.Builder(context, "SSG_CHANNEL")
                                 .setSmallIcon(R.drawable.siren_icon)
                                 .setContentTitle("Alarm Notification!")
@@ -193,6 +194,6 @@ fun noticeAlarm(
             return
         }
 
-        notify(R.string.channel_name, builder.build())
+        notify(1, builder.build())
     }
 }
