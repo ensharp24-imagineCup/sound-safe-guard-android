@@ -12,15 +12,19 @@ import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
+import com.microsoft.cognitiveservices.speech.audio.AudioConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.azurewebsites.soundsafeguard.R
+import net.azurewebsites.soundsafeguard.model.AudioRecoder
+import net.azurewebsites.soundsafeguard.utils.ArrayConvertor
 
-class DataClientService(private val context: Context) : DataClient.OnDataChangedListener {
+class DataClientService(private val context: Context, audioRecoder: AudioRecoder) : DataClient.OnDataChangedListener {
 
     private val azureSTT = AzureSTT()
-
+    var audioData:FloatArray? = null
+    val audioRecoder = audioRecoder
     override fun onDataChanged(dataEventBuffer: DataEventBuffer) {
         for (event in dataEventBuffer) {
             if (event.type == DataEvent.TYPE_CHANGED && event.dataItem.uri.path == "/audio_record") {
@@ -30,6 +34,7 @@ class DataClientService(private val context: Context) : DataClient.OnDataChanged
 
                 if (audioData != null) {
                     useAudio(audioData, timestamp)
+                    sendAudioData(audioData)
                 }
             }
         }
@@ -41,6 +46,11 @@ class DataClientService(private val context: Context) : DataClient.OnDataChanged
 
     fun unregisterDataClient() {
         Wearable.getDataClient(context).removeListener(this)
+    }
+
+    private fun sendAudioData(audioData: ByteArray){
+        var arrayConvertor = ArrayConvertor()
+        audioRecoder.processAudioFrame(arrayConvertor.byteArrayToFloatArray(audioData))
     }
 
     // Wear OS에서 받은 오디오 데이터를 사용하는 메서드

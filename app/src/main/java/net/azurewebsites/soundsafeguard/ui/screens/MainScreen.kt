@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +43,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.azurewebsites.soundsafeguard.R
+import net.azurewebsites.soundsafeguard.model.AudioRecoder
+import net.azurewebsites.soundsafeguard.service.DataClientService
 import net.azurewebsites.soundsafeguard.ui.components.CustomText
 import net.azurewebsites.soundsafeguard.viewmodel.MainViewModel
 import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModel
@@ -50,74 +53,53 @@ import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 @Composable
 fun MainScreen(
     viewModel: SoundViewModel,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    dataClientService: DataClientService,
+    audioRecoder: AudioRecoder
+
 ) {
+
     //사용자가 선택한 사운드
     val selectedSounds by viewModel.selectedSound.collectAsState(initial = emptyList())
     val isActivated by mainViewModel.isActivated
     //현재의 LocalContext
     val context = LocalContext.current
-
-    var setText by remember { mutableStateOf("hi") }
     val offset = Offset(5.0f, 10.0f)
 
-    val probabilityThreshold = 0.3f
     val audioClassifier = AudioClassifier.createFromFile(context, "yamnet.tflite")
-    val tensor = audioClassifier.createInputTensorAudio()
-
-    val record = try {
-        audioClassifier.createAudioRecord()
-    } catch (e: Exception) {
-        Log.e("AudioRecord", "Failed to create AudioRecord", e)
-        null
+    val label by remember {
+        derivedStateOf { audioRecoder.label }
     }
 
     //활성화 상태일 때 녹음 시작
     LaunchedEffect(isActivated) {
         if (isActivated) {
-            record?.startRecording()
+            audioRecoder.startRecord()
             while (isActivated) {
+                println("+"+label)
                 withContext(Dispatchers.IO) {
-                    val numberOfSamples = tensor.load(record)
-                    val output = audioClassifier.classify(tensor)
-
-                    val filteredModelOutput = output[0].categories.filter {
-                        it.score > probabilityThreshold
-                    }
-
-                    if (filteredModelOutput.isNotEmpty()) {
-                        //Test용 코드 label -> score 출력
-                        val outputStr = filteredModelOutput.sortedBy { -it.score }
-                            .joinToString(separator = "\n") { "${it.label} -> ${it.score}" }
-                        withContext(Dispatchers.Main) {
-                            setText = outputStr
-                        }
-
+                    if(!label.isEmpty()){
                         val matchingCategories =
-                            filteredModelOutput.filter { it.label in selectedSounds }
+                            selectedSounds.filter { it in label }
                         println(matchingCategories)
                         if (matchingCategories.isNotEmpty()) {
                             matchingCategories.map {
-                                var builder = NotificationCompat.Builder(context, "SSG_CHANNEL")
-                                    .setSmallIcon(R.drawable.siren_icon)
-                                    .setContentTitle("Alarm Notification!")
-                                    .setContentText(it.label)
-                                    .setStyle(
-                                        NotificationCompat.BigTextStyle()
-                                            .bigText("catched " + it.label + "!")
-                                    )
-                                    .setAutoCancel(true)
-                                    .setPriority(NotificationCompat.PRIORITY_MAX) // 중요도 설정
-                                noticeAlarm(context, builder)
-                            }
+                            var builder = NotificationCompat.Builder(context, "SSG_CHANNEL")
+                                .setSmallIcon(R.drawable.siren_icon)
+                                .setContentTitle("Alarm Notification!")
+                                .setContentText(label)
+                                .setStyle(
+                                    NotificationCompat.BigTextStyle()
+                                        .bigText("catched " + label + "!")
+                                )
+                                .setAutoCancel(true)
+                                .setPriority(NotificationCompat.PRIORITY_HIGH) // 중요도 설정
+                            noticeAlarm(context, builder)
                         }
                     }
                 }
                 delay(500)
             }
-            record?.stop()
-        } else {
-            record?.stop()
         }
     }
 
@@ -165,7 +147,7 @@ fun MainScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    text = setText,
+                    text = label,
                     color = Color.Black
                 )
                 if (isActivated) {

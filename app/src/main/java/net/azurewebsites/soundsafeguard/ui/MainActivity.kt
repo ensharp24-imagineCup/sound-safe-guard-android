@@ -40,7 +40,8 @@ import net.azurewebsites.soundsafeguard.viewmodel.SoundViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
-    private val dataClientService = DataClientService(this)
+
+    var dataClientService:DataClientService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,8 @@ class MainActivity : ComponentActivity() {
         //AudioRecorder 생성 (녹음, 데이터 출력 등 )
         val audioRecorder =
             AudioRecoder(this, AssetManager().loadInterpreter(this, "yamnet.tflite"))
+        dataClientService = DataClientService(this, audioRecorder)
+
 
         createNotificationChannel()
 
@@ -56,7 +59,7 @@ class MainActivity : ComponentActivity() {
             SoundViewModelFactory(applicationContext)
         )[SoundViewModel::class.java]
 
-        dataClientService.registerDataClient()
+        dataClientService!!.registerDataClient()
 
         setContent {
             val mainViewModel: MainViewModel = viewModel()
@@ -99,7 +102,10 @@ class MainActivity : ComponentActivity() {
                             composable("main") {
                                 MainScreen(
                                     viewModel = soundViewModel,
-                                    mainViewModel = mainViewModel
+                                    mainViewModel = mainViewModel,
+                                    dataClientService = dataClientService!!,
+                                    audioRecoder = audioRecorder
+
                                 )
                             }
                             composable("soundSetting") {
@@ -128,7 +134,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        dataClientService.unregisterDataClient()
+        dataClientService?.unregisterDataClient()
     }
 
     private fun createNotificationChannel() {

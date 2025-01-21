@@ -1,7 +1,7 @@
 [versions]
 activityComposeVersion = "1.7.2"
 activityKtx = "1.9.3"
-agp = "8.7.3"
+agp = "8.8.0"
 composeMaterialVersion = "1.2.0"
 datastorePreferences = "1.1.1"
 googlePlayServicesWearable = "18.1.0"
