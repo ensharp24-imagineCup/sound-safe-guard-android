@@ -76,25 +76,26 @@ fun MainScreen(
         if (isActivated) {
             audioRecoder.startRecord()
             while (isActivated) {
-                println("+"+label)
+                println("+" + label)
                 withContext(Dispatchers.IO) {
-                    if(!label.isEmpty()){
+                    if (!label.isEmpty()) {
                         val matchingCategories =
                             selectedSounds.filter { it in label }
                         println(matchingCategories)
                         if (matchingCategories.isNotEmpty()) {
                             matchingCategories.map {
-                            var builder = NotificationCompat.Builder(context, "SSG_CHANNEL")
-                                .setSmallIcon(R.drawable.siren_icon)
-                                .setContentTitle("Alarm Notification!")
-                                .setContentText(label)
-                                .setStyle(
-                                    NotificationCompat.BigTextStyle()
-                                        .bigText("catched " + label + "!")
-                                )
-                                .setAutoCancel(true)
-                                .setPriority(NotificationCompat.PRIORITY_HIGH) // 중요도 설정
-                            noticeAlarm(context, builder)
+                                var builder = NotificationCompat.Builder(context, "SSG_CHANNEL")
+                                    .setSmallIcon(R.drawable.siren_icon)
+                                    .setContentTitle("Alarm Notification!")
+                                    .setContentText(label)
+                                    .setStyle(
+                                        NotificationCompat.BigTextStyle()
+                                            .bigText("catched " + label + "!")
+                                    )
+                                    .setAutoCancel(true)
+                                    .setPriority(NotificationCompat.PRIORITY_HIGH) // 중요도 설정
+                                noticeAlarm(context, builder)
+                            }
                         }
                     }
                 }
